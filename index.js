@@ -27,8 +27,8 @@ function setup() {
     y = random(0,HEIGHT/4);
     r = random(1,4);
     m = r*r;
-    vx = random(-80,80);
-    vy = random(-80,80)
+    vx = random(-100,80);
+    vy = random(-100,80)
     append(p,new Particle(r,m,x,y,vx,vy,0,0,1))
   }
 
