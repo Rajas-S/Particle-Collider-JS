@@ -1,19 +1,19 @@
 class Particle{
-  constructor(r,m,x,y,vx,vy,ax,ay,c){
+  constructor(r,m,x,y,vx,vy,ax,ay,e){
     this.radius = r;
     this.mass = m;
     this.x = x;
     this.y = y;
     this.velocity = new Vector2(vx,vy);
     this.acceleration = new Vector2(ax,ay);
-    this.collision_energy_efficiency = c;
+    this.restitution = e;
   }
 
-  update(){
-    this.x += this.velocity.x;
-    this.y += this.velocity.y;
-    this.velocity.x += this.acceleration.x;
-    this.velocity.y += this.acceleration.y;
+  update(deltaTime){
+    this.x += this.velocity.x*deltaTime;
+    this.y += this.velocity.y*deltaTime;
+    this.velocity.x += this.acceleration.x*deltaTime;
+    this.velocity.y += this.acceleration.y*deltaTime;
   }
 
   draw(){
@@ -21,80 +21,87 @@ class Particle{
   }
 
   CheckWallCollision(){
-    if(this.x<this.radius){this.x=this.radius; this.velocity.x*=-1*this.collision_energy_efficiency; this.velocity.y*=this.collision_energy_efficiency;}
-    if(this.x>WIDTH-this.radius){this.x=WIDTH-this.radius; this.velocity.x*=-1*this.collision_energy_efficiency; this.velocity.y*=this.collision_energy_efficiency;}
-    if(this.y<this.radius){this.y=this.radius; this.velocity.y*=-1*this.collision_energy_efficiency; this.velocity.x*=this.collision_energy_efficiency;}
-    if(this.y>HEIGHT-this.radius){this.y=HEIGHT-this.radius; this.velocity.y*=-1*this.collision_energy_efficiency; this.velocity.x*=this.collision_energy_efficiency;} 
+
+    // application of velocity dampening is probably not correct but is good enough
+
+    if(this.x<this.radius){this.x=this.radius; this.velocity.x*=-1*this.restitution; this.velocity.y*=this.restitution;}
+    if(this.x>WIDTH-this.radius){this.x=WIDTH-this.radius; this.velocity.x*=-1*this.restitution; this.velocity.y*=this.restitution;}
+    if(this.y<this.radius){this.y=this.radius; this.velocity.y*=-1*this.restitution; this.velocity.x*=this.restitution;}
+    if(this.y>HEIGHT-this.radius){this.y=HEIGHT-this.radius; this.velocity.y*=-1*this.restitution; this.velocity.x*=this.restitution;} 
   }
 
   CheckCollision(other){
-    return dist(this.x,this.y,other.x,other.y)<this.radius+other.radius;
+    return dist(this.x,this.y,other.x,other.y)<=this.radius+other.radius;
   }
 
   Collide(other){
 
+    // ensure particles dont occupy the same space
     if(dist(this.x,this.y,other.x,other.y)==0){return;}
-    let B = new Vector2(this.x-other.x,this.y-other.y);
-    let A_this = this.velocity;
+    if(this.mass==0 || other.mass==0){return;}
     
-    let mag_B = (sqrt(B.x*B.x+B.y*B.y))
-    let Uvelocity_B = new Vector2(B.x/mag_B,B.y/mag_B);
+    // obtain vectors for projection and scaling using physics eq.
+    const B = new Vector2(this.x-other.x,this.y-other.y);
+    const A_this = new Vector2(this.velocity.x,this.velocity.y);
     
-    let overlap = this.radius+other.radius-dist(this.x,this.y,other.x,other.y);
-    let epsilon = 0.01
+    const mag_B = B.mag();
+    const B_norm = B.norm();
+    
+    // apply correction along vectors for projection
+    const overlap = this.radius+other.radius-dist(this.x,this.y,other.x,other.y);
+    const epsilon = 0.001;
+    const overlapThresh = 0;
 
-    if(overlap>-epsilon){
-      let correction = overlap/2;
-  
-      let correction_v = new Vector2(Uvelocity_B.x*correction*(1+epsilon),Uvelocity_B.y*correction*(1+epsilon));
+    if(overlap>overlapThresh){
+      const correction = overlap/2;
       
-      this.x += correction_v.x 
-      this.y += correction_v.y 
-  
-      other.x += -correction_v.x
-      other.y += -correction_v.x 
+      const correction_v = B_norm.mult(correction);
+      
+      this.x += correction_v.x + epsilon
+      this.y += correction_v.y + epsilon
+      
+      other.x += -correction_v.x - epsilon
+      other.y += -correction_v.y - epsilon
     }
 
-    // ---------
-    
-    let dot_this = B.x*A_this.x+B.y*A_this.y;
-    let proj_this = dot_this/(sqrt(B.x*B.x+B.y*B.y));
 
+    // ---------
+  
+
+    let dot_this = dot(A_this,B)
+    let proj_this = dot_this/mag_B;
+    
     let A_other = other.velocity;
-    let dot_other = B.x*A_other.x+B.y*A_other.y;
-    let proj_other = dot_other/(sqrt(B.x*B.x+B.y*B.y));
+    let dot_other = dot(A_other,B);
+    let proj_other = dot_other/mag_B;
 
     let mass_sum = this.mass+other.mass;
     
     let new_proj_this = ((this.mass-other.mass)/mass_sum)*proj_this + (2*other.mass/mass_sum)*proj_other
     let new_proj_other = ((other.mass-this.mass)/mass_sum)*proj_other + (2*this.mass/mass_sum)*proj_this
 
+    // a temperamental set of equations for inelastic equations - may require fixing because behaviour is not as expected 
+
+    // let restitution = (this.restitution+other.restitution)/2;
+    // let new_proj_this = ((restitution*other.mass*(proj_other-proj_this))+this.mass*proj_this+other.mass*proj_other)/mass_sum;
+    // let new_proj_other = ((restitution*this.mass*(proj_this-proj_other))+this.mass*proj_this+other.mass*proj_other)/mass_sum;
+
+
+    // find vector projections of scaled collision values
+
+    let new_velocity_this = B_norm.mult(new_proj_this);
+    let old_velocity_this = B_norm.mult(proj_this);
     
-    let new_velocity_this = new Vector2(Uvelocity_B.x*new_proj_this,Uvelocity_B.y*new_proj_this);
-    let old_velocity_this = new Vector2(Uvelocity_B.x*proj_this,Uvelocity_B.y*proj_this);
-
-    // new_velocity_this; // new vector proj of this
-
-    let mag_velocity_other = sqrt(other.velocity.x*other.velocity.x+other.velocity.y*other.velocity.y)
-  
-    let new_velocity_other = new Vector2(Uvelocity_B.x*new_proj_other,Uvelocity_B.y*new_proj_other);
-    let old_velocity_other = new Vector2(Uvelocity_B.x*proj_other,Uvelocity_B.y*proj_other);
-
-    // new_velocity_other; // new vector proj of other
-
+    let new_velocity_other = B_norm.mult(new_proj_other);
+    let old_velocity_other = B_norm.mult(proj_other);
+    
+    // add new velocities
     
     this.velocity.x += new_velocity_this.x-old_velocity_this.x
     this.velocity.y += new_velocity_this.y-old_velocity_this.y
-
+    
     other.velocity.x += new_velocity_other.x-old_velocity_other.x
     other.velocity.y += new_velocity_other.y-old_velocity_other.y
-
-    this.velocity.x *= this.collision_energy_efficiency
-    this.velocity.y *= this.collision_energy_efficiency
-
-    other.velocity.x *= this.collision_energy_efficiency
-    other.velocity.y *= this.collision_energy_efficiency
-
 
   }
   
