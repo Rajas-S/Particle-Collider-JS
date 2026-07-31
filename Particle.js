@@ -22,6 +22,12 @@ class Particle{
   }
 
   draw(){
+    let speedSq = distSq(this.vx,this.vy);
+    let KE = this.mass*speedSq*0.0015;
+    const r = clamp(KE,0,255);
+    const g = clamp(100-KE,0,255);
+    const b = clamp(255-KE,0,255);
+    fill(r,g,b);
     ellipse(this.x,this.y,this.radius*2,this.radius*2);
   }
 
