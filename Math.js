@@ -1,24 +1,29 @@
-class Vector2{
-  constructor(x,y){
-    this.x=x;
-    this.y=y;
-  }
-  // return magnitude of vector
-  mag(){
-    return sqrt(this.x*this.x+this.y*this.y);
-  }
+// return magnitude of vector
+function mag(x,y){
+  return sqrt(x*x+y*y);
+}
+function magA(list){
+  return sqrt(list[0]*list[0]+list[1]*list[1]);
+}
   // return normalised vector (same direction but mag of 1)
-  norm(){
-    return new Vector2(this.x/this.mag(),this.y/this.mag());
-  }
+function norm(x,y){
+  mag = mag(x,y)
+  return [x/mag,y/mag];
+}
+function normA(list){
+  mag = magA(list)
+  return [list[0]/mag,list[1]/mag];
+}
   // scales the vector by k (multiply)
-  mult(k){
-    return new Vector2(this.x*k, this.y*k);
-  }
+function mult(x,y,k){
+   return [x*k,y*k];
+}
+function multA(v,k){
+   return [v[0]*k,v[1]*k];
 }
 
 function dot(A,B){
-    return A.x*B.x+A.y*B.y;
+    return A[0]*B[0]+A[1]*B[1];
 }
 
 function clamp(value, minimum, maximum){
