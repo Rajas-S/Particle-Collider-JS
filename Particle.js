@@ -23,22 +23,22 @@ class Particle{
 
   draw(){
     let speedSq = distSq(this.vx,this.vy);
-    let KE = this.mass*speedSq*0.0015;
+    let KE = this.mass*speedSq*0.003;
     const r = clamp(KE,0,255);
-    const g = clamp(100-KE,0,255);
-    const b = clamp(255-KE,0,255);
+    const g = clamp(180-KE*KE*0.0005,0,255);
+    const b = clamp(255-KE*3,0,255);
     fill(r,g,b);
     ellipse(this.x,this.y,this.radius*2,this.radius*2);
   }
 
-  CheckWallCollision(){
+  CheckWallCollision(x1,y1,x2,y2){
 
     // application of velocity dampening is probably not correct but is good enough
 
-    if(this.x<this.radius){this.x=this.radius; this.vx*=-1*this.restitution; this.vy*=this.restitution;}
-    if(this.x>WIDTH-this.radius){this.x=WIDTH-this.radius; this.vx*=-1*this.restitution; this.vy*=this.restitution;}
-    if(this.y<this.radius){this.y=this.radius; this.vy*=-1*this.restitution; this.vx*=this.restitution;}
-    if(this.y>HEIGHT-this.radius){this.y=HEIGHT-this.radius; this.vy*=-1*this.restitution; this.vx*=this.restitution;} 
+    if(this.x<this.radius+x1){this.x=this.radius+x1; this.vx*=-1*this.restitution; this.vy*=this.restitution;}
+    if(this.x>x2-this.radius){this.x=x2-this.radius; this.vx*=-1*this.restitution; this.vy*=this.restitution;}
+    if(this.y<this.radius+y1){this.y=this.radius+y1; this.vy*=-1*this.restitution; this.vx*=this.restitution;}
+    if(this.y>y2-this.radius){this.y=y2-this.radius; this.vy*=-1*this.restitution; this.vx*=this.restitution;} 
   }
 
   CheckCollision(other){
