@@ -25,5 +25,8 @@ function clamp(value, minimum, maximum){
   if(value>maximum){return maximum;}
   if(value<minimum){return minimum;}
   return value;
+}
 
+function distSq(a,b){
+  return a*a+b*b;
 }
