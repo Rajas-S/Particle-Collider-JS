@@ -7,6 +7,11 @@
 
 
 const WIDTH = 1520, HEIGHT = 720;
+const SCREENX1 = 300, SCREENX2 = 1200, SCREENY1 = 0, SCREENY2 = HEIGHT
+
+let SIMSPEED = 1;
+
+let pause = 0;
 
 let n = 2500;
 let p = [];
@@ -36,18 +41,22 @@ function setup() {
   
   let x = random(0,WIDTH);
   let y = random(0,HEIGHT);
-  let r = random(35,50);
+  let r = random(25,30);
   let m = r*r;
   let vx = random(-1,1);
   let vy = random(-1,1)
   p.push(new Particle(r,m,x,y,vx,vy,0,0,1))
 
+
+  // initialise gui
+  initGUI();
+
+  // start main func
+
 }
-
-function draw() {
-
-    background(0,0,30);
-    
+function main(){
+    background(255,238,0);
+    drawGUI();
     // particles check and collide
     for(let j=0;j<n;j++){
       for(let k=j+1;k<n;k++){
@@ -56,28 +65,31 @@ function draw() {
         }
       }
     }
-
-
+  
+  
     //particles check wall collision
     for(let i=0;i<n;i++){
-       p[i].CheckWallCollision(300,100,1200,600);
+       p[i].CheckWallCollision(SCREENX1,SCREENY1,SCREENX2,SCREENY2);
     }
-
+  
     // particles update positions and velocities
-    currenttime = Date.now()/1000;
-    dt = currenttime-lasttime;
-    fps = 1/dt;
-    lasttime=currenttime;
-
+  
     for(let i=0;i<n;i++){
-       p[i].update(dt);
+       p[i].update(dt,SIMSPEED);
     }
-
+  
     // draw each particle
     for(let i=0;i<n;i++){
        p[i].draw(); 
     }
+}
+function draw() {
+  currenttime = Date.now()/1000;
+  dt = currenttime-lasttime;
+  fps = 1/dt;
+  lasttime=currenttime;
 
-
+  if(!pause){main();}
+  GUI();
 }
 
