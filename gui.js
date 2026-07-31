@@ -8,7 +8,7 @@ function initGUI(){
 
 function drawGUI(){
     // draw main GUI frame
-    fill(0,0,20);
+    fill(0,0,40);
     rect(SCREENX1-PADDING,SCREENY1-PADDING,SCREENX2-SCREENX1+2*PADDING,SCREENY2-SCREENY1+2*PADDING);
 }
 function GUI(){
