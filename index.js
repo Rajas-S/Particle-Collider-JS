@@ -6,7 +6,7 @@
 //       stop dt from spiking if exit tab
 
 
-const WIDTH = 1000, HEIGHT = 600;
+const WIDTH = 1520, HEIGHT = 720;
 
 let n = 2500;
 let p = [];
@@ -23,23 +23,30 @@ function setup() {
   noStroke();
   // initalise n random particles with random attributes
   for(let i=0;i<n;i++){
-    let x = i*WIDTH/(n*50);
-    let y = random(0,HEIGHT/100);
-    let r = random(1,4);
+    let x = 900*Math.round(random(0,1))+300;
+    let y = 500*Math.round(random(0,1))+100;
+    let r = random(0.5,3);
     let m = r*r;
-    let vx = random(-100,0);
+    let vx = random(-150,0);
     let vy = random(-100,0)
     p.push(new Particle(r,m,x,y,vx,vy,0,0,1))
   }
 
   n+=1;
-  p.push(new Particle(50,2500,200,350,0,0,0,0,1))
+  
+  let x = random(0,WIDTH);
+  let y = random(0,HEIGHT);
+  let r = random(35,50);
+  let m = r*r;
+  let vx = random(-1,1);
+  let vy = random(-1,1)
+  p.push(new Particle(r,m,x,y,vx,vy,0,0,1))
 
 }
 
 function draw() {
 
-    background(220);
+    background(0,0,30);
     
     // particles check and collide
     for(let j=0;j<n;j++){
@@ -53,7 +60,7 @@ function draw() {
 
     //particles check wall collision
     for(let i=0;i<n;i++){
-       p[i].CheckWallCollision();
+       p[i].CheckWallCollision(300,100,1200,600);
     }
 
     // particles update positions and velocities
