@@ -1,5 +1,5 @@
 const epsilon = 0.001;
-const overlapThresh = 0;
+const overlapThresh = -0.001;
 
 class Particle{
   constructor(r,m,x,y,vx,vy,ax,ay,e){
@@ -14,11 +14,11 @@ class Particle{
     this.restitution = e;
   }
 
-  update(deltaTime){
-    this.x += this.vx*deltaTime;
-    this.y += this.vy*deltaTime;
-    this.vx += this.ax*deltaTime;
-    this.vy += this.ay*deltaTime;
+  update(deltaTime,SIMSPEED){
+    this.x += this.vx*deltaTime * SIMSPEED;
+    this.y += this.vy*deltaTime * SIMSPEED;
+    this.vx += this.ax*deltaTime * SIMSPEED;
+    this.vy += this.ay*deltaTime * SIMSPEED;
   }
 
   draw(){
@@ -51,6 +51,8 @@ class Particle{
     let this_velocity = [this.vx,this.vy];
     let other_velocity = [other.vx,other.vy];
 
+    const mass_sum = this.mass+other.mass;
+
     // ensure particles dont occupy the same space
     if(distanceSq==0){return;}
     if(this.mass==0 || other.mass==0){return;}
@@ -65,15 +67,20 @@ class Particle{
     const overlap = this.radius+other.radius-sqrt(distanceSq);
 
     if(overlap>overlapThresh){
-      const correction = overlap/2;
+      const this_percentage = this.mass/mass_sum;
+      const other_percentage = other.mass/mass_sum;
       
-      const correction_v = multA(B_norm,correction);
+      const correction_this = overlap*other_percentage;
+      const correction_other = overlap*this_percentage;
       
-      this.x += correction_v[0] + epsilon
-      this.y += correction_v[1] + epsilon
+      const correction_v_this = multA(B_norm,correction_this);
+      const correction_v_other = multA(B_norm,correction_other);
       
-      other.x += -correction_v[0] - epsilon
-      other.y += -correction_v[1] - epsilon
+      this.x += correction_v_this[0] + epsilon
+      this.y += correction_v_this[1] + epsilon
+      
+      other.x += -correction_v_other[0] - epsilon
+      other.y += -correction_v_other[1] - epsilon
     }
 
 
@@ -81,8 +88,6 @@ class Particle{
   
     let proj_this = dot(this_velocity,B)/mag_B;
     let proj_other = dot(other_velocity,B)/mag_B;
-
-    let mass_sum = this.mass+other.mass;
     
     let new_proj_this = ((this.mass-other.mass)/mass_sum)*proj_this + (2*other.mass/mass_sum)*proj_other
     let new_proj_other = ((other.mass-this.mass)/mass_sum)*proj_other + (2*this.mass/mass_sum)*proj_this
