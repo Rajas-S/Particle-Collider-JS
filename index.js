@@ -25,7 +25,7 @@ function setup() {
   for(let i=0;i<n;i++){
     let x = i*WIDTH/(n*50);
     let y = random(0,HEIGHT/100);
-    let r = random(2,2);
+    let r = random(1,4);
     let m = r*r;
     let vx = random(-100,0);
     let vy = random(-100,0)
