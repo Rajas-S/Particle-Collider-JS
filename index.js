@@ -8,7 +8,7 @@
 
 const WIDTH = 1000, HEIGHT = 600;
 
-let n = 1000;
+let n = 3500;
 let p = [];
 
 let lasttime = Date.now()/1000;
@@ -23,12 +23,12 @@ function setup() {
   noStroke();
   // initalise n random particles with random attributes
   for(let i=0;i<n;i++){
-    let x = i*WIDTH/(n);
-    let y = random(0,HEIGHT/4);
-    let r = random(1,4);
+    let x = i*WIDTH/(n*50);
+    let y = random(0,HEIGHT/100);
+    let r = random(2,2);
     let m = r*r;
-    let vx = random(-100,80);
-    let vy = random(-100,80)
+    let vx = random(-100,0);
+    let vy = random(-100,0)
     p.push(new Particle(r,m,x,y,vx,vy,0,0,1))
   }
 
