@@ -1,3 +1,6 @@
+const epsilon = 0.001;
+const overlapThresh = 0;
+
 class Particle{
   constructor(r,m,x,y,vx,vy,ax,ay,e){
     this.radius = r;
@@ -31,26 +34,25 @@ class Particle{
   }
 
   CheckCollision(other){
-    return dist(this.x,this.y,other.x,other.y)<=this.radius+other.radius;
+    return distSq(this.x-other.x,this.y-other.y)<=(this.radius+other.radius)*(this.radius+other.radius);
   }
 
   Collide(other){
 
+    let distanceSq = distSq(this.x,this.y,other.x,other.y);
+
     // ensure particles dont occupy the same space
-    if(dist(this.x,this.y,other.x,other.y)==0){return;}
+    if(distanceSq==0){return;}
     if(this.mass==0 || other.mass==0){return;}
     
     // obtain vectors for projection and scaling using physics eq.
     const B = new Vector2(this.x-other.x,this.y-other.y);
-    const A_this = new Vector2(this.velocity.x,this.velocity.y);
     
     const mag_B = B.mag();
     const B_norm = B.norm();
     
     // apply correction along vectors for projection
-    const overlap = this.radius+other.radius-dist(this.x,this.y,other.x,other.y);
-    const epsilon = 0.001;
-    const overlapThresh = 0;
+    const overlap = this.radius+other.radius-sqrt(distanceSq);
 
     if(overlap>overlapThresh){
       const correction = overlap/2;
@@ -67,13 +69,9 @@ class Particle{
 
     // ---------
   
-
-    let dot_this = dot(A_this,B)
-    let proj_this = dot_this/mag_B;
+    let proj_this = dot(this.velocity,B)/mag_B;
     
-    let A_other = other.velocity;
-    let dot_other = dot(A_other,B);
-    let proj_other = dot_other/mag_B;
+    let proj_other = dot(other.velocity,B)/mag_B;
 
     let mass_sum = this.mass+other.mass;
     
