@@ -8,7 +8,7 @@
 
 const WIDTH = 1000, HEIGHT = 600;
 
-let n = 3500;
+let n = 2500;
 let p = [];
 
 let lasttime = Date.now()/1000;
@@ -51,28 +51,26 @@ function draw() {
     }
 
 
-      //particles check wall collision
+    //particles check wall collision
     for(let i=0;i<n;i++){
        p[i].CheckWallCollision();
     }
 
-      // particles update positions and velocities
+    // particles update positions and velocities
     currenttime = Date.now()/1000;
     dt = currenttime-lasttime;
+    fps = 1/dt;
+    lasttime=currenttime;
 
     for(let i=0;i<n;i++){
        p[i].update(dt);
     }
 
-      // draw each particle
+    // draw each particle
     for(let i=0;i<n;i++){
-      fill(0,0,255);
-      if(i<n/4){fill(255,0,0);}
        p[i].draw(); 
     }
 
 
-   fps = 1/dt;
-   lasttime=currenttime;
 }
 
