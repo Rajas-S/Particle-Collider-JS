@@ -2,7 +2,7 @@ const epsilon = 0.001;
 const overlapThresh = -0.001;
 
 class Particle{
-  constructor(r,m,x,y,vx,vy,ax,ay,e){
+  constructor(r,m,x,y,vx,vy,ax,ay){
     this.radius = r;
     this.mass = m;
     this.x = x;
@@ -11,10 +11,9 @@ class Particle{
     this.vy = vy;
     this.ax = ax;
     this.ay = ay;
-    this.restitution = e;
   }
 
-  update(deltaTime,SIMSPEED){
+  update(deltaTime,SIMSPEED,VISC){
     this.x += this.vx*deltaTime * SIMSPEED;
     this.y += this.vy*deltaTime * SIMSPEED;
     this.vx += this.ax*deltaTime * SIMSPEED;
@@ -35,10 +34,10 @@ class Particle{
 
     // application of velocity dampening is probably not correct but is good enough
 
-    if(this.x<this.radius+x1){this.x=this.radius+x1; this.vx*=-1*this.restitution; this.vy*=this.restitution;}
-    if(this.x>x2-this.radius){this.x=x2-this.radius; this.vx*=-1*this.restitution; this.vy*=this.restitution;}
-    if(this.y<this.radius+y1){this.y=this.radius+y1; this.vy*=-1*this.restitution; this.vx*=this.restitution;}
-    if(this.y>y2-this.radius){this.y=y2-this.radius; this.vy*=-1*this.restitution; this.vx*=this.restitution;} 
+    if(this.x<this.radius+x1){this.x=this.radius+x1; this.vx*=-1}
+    if(this.x>x2-this.radius){this.x=x2-this.radius; this.vx*=-1}
+    if(this.y<this.radius+y1){this.y=this.radius+y1; this.vy*=-1}
+    if(this.y>y2-this.radius){this.y=y2-this.radius; this.vy*=-1} 
   }
 
   CheckCollision(other){
@@ -89,14 +88,13 @@ class Particle{
     let proj_this = dot(this_velocity,B)/mag_B;
     let proj_other = dot(other_velocity,B)/mag_B;
     
-    let new_proj_this = ((this.mass-other.mass)/mass_sum)*proj_this + (2*other.mass/mass_sum)*proj_other
-    let new_proj_other = ((other.mass-this.mass)/mass_sum)*proj_other + (2*this.mass/mass_sum)*proj_this
+    // let new_proj_this = ((this.mass-other.mass)/mass_sum)*proj_this + (2*other.mass/mass_sum)*proj_other
+    // let new_proj_other = ((other.mass-this.mass)/mass_sum)*proj_other + (2*this.mass/mass_sum)*proj_this
 
     // a temperamental set of equations for inelastic equations - may require fixing because behaviour is not as expected 
 
-    // let restitution = (this.restitution+other.restitution)/2;
-    // let new_proj_this = ((restitution*other.mass*(proj_other-proj_this))+this.mass*proj_this+other.mass*proj_other)/mass_sum;
-    // let new_proj_other = ((restitution*this.mass*(proj_this-proj_other))+this.mass*proj_this+other.mass*proj_other)/mass_sum;
+    let new_proj_this = ((restitution*other.mass*(proj_other-proj_this))+this.mass*proj_this+other.mass*proj_other)/mass_sum;
+    let new_proj_other = ((restitution*this.mass*(proj_this-proj_other))+this.mass*proj_this+other.mass*proj_other)/mass_sum;
 
 
     // find vector projections of scaled collision values
