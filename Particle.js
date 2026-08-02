@@ -27,7 +27,7 @@ class Particle{
     const g = clamp(180-KE*KE*0.0005,0,255);
     const b = clamp(255-KE*3,0,255);
     fill(r,g,b);
-    ellipse(this.x,this.y,this.radius*2,this.radius*2);
+    circle(this.x,this.y,this.radius*2);
   }
 
   CheckWallCollision(x1,y1,x2,y2){
