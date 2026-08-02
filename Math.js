@@ -31,6 +31,14 @@ function clamp(value, minimum, maximum){
   if(value<minimum){return minimum;}
   return value;
 }
+function clampMin(value, minimum){
+  if(value<minimum){return minimum;}
+  return value;
+}
+function clampMax(value, maximum){
+  if(value>maximum){return maximum;}
+  return value;
+}
 
 function distSq(a,b){
   return a*a+b*b;
