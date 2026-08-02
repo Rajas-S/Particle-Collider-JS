@@ -16,7 +16,7 @@ const MAXPARTICLERADIUS = 30;
 
 let pause = 0;
 
-let n = 45;
+let n = 4500;
 let p = [];
 
 let lasttime = Date.now()/1000;
@@ -40,7 +40,7 @@ function setup() {
   for(let i=0;i<n;i++){
     let x = 900*Math.round(random(0,1))+300;
     let y = 500*Math.round(random(0,1))+100;
-    let r = random(0.1,20.5);
+    let r = random(0.1,2.5);
     let m = r*r;
     let vx = random(-150,0);
     let vy = random(-100,0)
