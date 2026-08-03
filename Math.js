@@ -1,9 +1,9 @@
 // return magnitude of vector
 function mag(x,y){
-  return sqrt(x*x+y*y);
+  return Math.sqrt(x*x+y*y);
 }
 function magA(list){
-  return sqrt(list[0]*list[0]+list[1]*list[1]);
+  return Math.sqrt(list[0]*list[0]+list[1]*list[1]);
 }
   // return normalised vector (same direction but mag of 1)
 function norm(x,y){

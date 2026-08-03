@@ -6,8 +6,29 @@
 //       stop dt from spiking if exit tab
 
 
-const WIDTH = 1520, HEIGHT = 708;
+
+const WIDTH = 1540, HEIGHT = 730;
 const SCREENX1 = 300, SCREENX2 = 1200, SCREENY1 = 0, SCREENY2 = HEIGHT
+const ctx = document.getElementById("myCanvas").getContext("2d");
+ctx.font = "18px serif";
+
+let mouseX, mouseY;
+let mousedownX, mousedownY;
+let mousedown = 0;
+document.addEventListener('mousemove', function(event) {
+    mouseX = event.clientX;
+    mouseY = event.clientY;
+});
+document.addEventListener('mousedown', function(event) {
+    mousedownX = event.clientX;
+    mousedownY = event.clientY;
+    mousedown = 1;
+});
+document.addEventListener('mouseup', function(event) {
+    mousedownX = event.clientX;
+    mousedownY = event.clientY;
+    mousedown = 0;
+});
 
 let SIMSPEED = 1;
 let restitution = 0.9;
@@ -15,7 +36,7 @@ let gridshow = 0;
 let showparticlecolour = 0;
 let particlerect = 1;
 
-const MAXPARTICLERADIUS = 3;
+const MAXPARTICLERADIUS = 2;
 const PARTICLECOLOURVALUE = 180;
 
 let pause = 0;
@@ -38,24 +59,21 @@ let posA = Array(POSALEN).fill(0);
 // -------------------------------------
 
 function setup() {
-  createCanvas(WIDTH, HEIGHT);
-  noStroke();
-  noSmooth();
+  //createCanvas(WIDTH, HEIGHT);
   // initalise n random particles with random attributes
   for(let i=0;i<n;i++){
     //let x = 900*Math.round(random(0,1))+300;
     //let y = 500*Math.round(random(0,1))+100;
-    let x = random(SCREENX1,SCREENX2);
-    let y = random(SCREENY1,SCREENY2);
-    let r = random(0.1,1.5);
+    let x = Math.random()*(SCREENX2-SCREENX1)+SCREENX1;
+    let y = Math.random()*(SCREENY2-SCREENY1)+SCREENY1;
+    let r = Math.random()*1.5+0.1;
     let m = r*r;
-    let vx = random(-150,150);
-    let vy = random(-150,150);
-    p[i]=new Particle(r,m,x,y,vx,vy,0,0);
+    let vx = Math.random()*300-150;
+    let vy = Math.random()*300-150;
+    p[i]= new Particle(r,m,x,y,vx,vy,0,0);
   }
 
   // n+=1;
-  
   // let x = random(0,WIDTH);
   // let y = random(0,HEIGHT);
   // let r = random(50,50);
@@ -68,60 +86,50 @@ function setup() {
   // initialise gui
   initGUI();
 
-  // start main func
-
 }
 function main(){
-    //background(255,238,0);
-    background(0,0,8);
-    noStroke();
-    drawGUI();
-    // particles check and collide
-    // for(let j=0;j<n;j++){
-    //   for(let k=j+1;k<n;k++){
-    //     if(p[j].CheckCollision(p[k])){
-    //           p[j].Collide(p[k]);
-    //     }
-    //   }
-    // }
 
-    SpatialPartitioning();
+  ctx.fillStyle = "rgb(0,0,8)"
+  ctx.fillRect(0,0,WIDTH,HEIGHT);
+  drawGUI();
+
+
+  SpatialPartitioning();
   
   
-    //particles check wall collision
-    for(let i=0;i<n;i++){
-       p[i].CheckWallCollision(SCREENX1,SCREENY1,SCREENX2,SCREENY2);
-    }
+  //particles check wall collision
+  for(let i=0;i<n;i++){
+    p[i].CheckWallCollision(SCREENX1,SCREENY1,SCREENX2,SCREENY2);
+  }
   
-    // particles update positions and velocities
+  // particles update positions and velocities
   
-    for(let i=0;i<n;i++){
-       p[i].update(dt,SIMSPEED);
-    }
+  for(let i=0;i<n;i++){
+    p[i].update(dt,SIMSPEED);
+  }
   
-    // draw each particle
-    for(let i=0;i<n;i++){
-      p[i].draw(showparticlecolour,particlerect); 
-    }
+  // draw each particle
+  for(let i=0;i<n;i++){
+    p[i].draw(showparticlecolour,particlerect);
+  }
 }
 function draw() {
-  currenttime = performance.now()/1000;
-  dt = currenttime-lasttime;
-  fps = 1/dt;
-  lasttime=currenttime;
-
-  main();
-  GUI();
-  if(gridshow){
-    for(let x=0;x<numX;x++){
-      for(let y=0;y<numY;y++){
-        stroke(255);
-        strokeWeight(0.1);
-        noFill();
-        rect(x*MAXPARTICLERADIUS+SCREENX1,y*MAXPARTICLERADIUS+SCREENY1,MAXPARTICLERADIUS,MAXPARTICLERADIUS);
+  ctx.fillRect(0,0,50,50);
+    currenttime = performance.now()/1000;
+    dt = currenttime-lasttime;
+    fps = 1/dt;
+    lasttime=currenttime;
+  
+    main();
+    GUI();
+    if(gridshow){
+      for(let x=0;x<numX;x++){
+        for(let y=0;y<numY;y++){
+          ctx.fillRect(x*MAXPARTICLERADIUS+SCREENX1,y*MAXPARTICLERADIUS+SCREENY1,MAXPARTICLERADIUS,MAXPARTICLERADIUS);
+        }
       }
     }
-  }
+    requestAnimationFrame(draw);
 }
 
 
@@ -164,9 +172,13 @@ function SpatialPartitioning(){
         for(let j=posA[i1];j<posA[i2];j++){particleK.Collide(p[iA[j]]);}
         for(let j=posA[i2];j<posA[clamp(i+2-numX,0,POSALEN)];j++){particleK.Collide(p[iA[j]]);}
         for(let j=posA[clampMin(i-1,0)];j<posA[i];j++){particleK.Collide(p[iA[j]]);}
-        for(let j=posA[i];j<posA[clampMax(i+1,POSALEN)];j++){particleK.Collide(p[iA[j]]);}
+        for(let j=k+1;j<posA[clampMax(i+1,POSALEN)];j++){particleK.Collide(p[iA[j]]);}
 
       }
     }
   }
 }
+
+// ---------------------------
+setup();
+draw();

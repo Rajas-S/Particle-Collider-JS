@@ -27,11 +27,16 @@ class Particle{
       const r = clamp(KE,0,255);
       const g = clamp(180-KE*KE*0.0005,0,255);
       const b = clamp(255-KE*3,0,255);
-      fill(r,g,b);
+      //fill(r,g,b);
+      ctx.fillStyle = `rgb(${r},${g},${b})`;
     }
-    else{fill(PARTICLECOLOURVALUE);}
-    if(particlerect){rect(this.x,this.y,this.radius*2,this.radius*2);}
-    else{circle(this.x,this.y,this.radius*2);}
+    else{ctx.fillStyle = `rgb(${PARTICLECOLOURVALUE},${PARTICLECOLOURVALUE},${PARTICLECOLOURVALUE})`;}
+    if(particlerect){ctx.fillRect(this.x,this.y,this.radius*2,this.radius*2);}
+    else{
+      ctx.beginPath();
+      ctx.arc(this.x,this.y,this.radius,0,2*Math.PI);
+      ctx.fill();
+    }
   }
 
   CheckWallCollision(x1,y1,x2,y2){
@@ -67,7 +72,7 @@ class Particle{
 
     
 
-    const mag_B = sqrt(distanceSq);
+    const mag_B = Math.sqrt(distanceSq);
     const inv_mag_B = 1/mag_B;
     const B_norm_x = Bx*inv_mag_B;
     const B_norm_y = By*inv_mag_B;

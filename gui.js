@@ -7,10 +7,10 @@ let stored_simspeed;
 function initGUI(){
     pauseButton = new Button(30,20,50,20,"Pause",16,255,0,51,pausefunc);
     startButton = new Button(30,50,50,20,"Start",16,0,230,84,startfunc);
-    simSpeed = new Slider(30,90,90,10,"Simulation Speed",16,50,50,50,2,1,0);
-    restitution_slider = new Slider(30,160,90,10,"Constant of Restitution",16,50,50,50,1.3,0.974,0.025);
-    grabradius_slider = new Slider(30,230,90,10,"Grab Radius",16,50,50,50,200,100,0);
-    sensitivity_slider = new Slider(30,300,90,10,"Sensitivity",16,50,50,50,5,2,0);
+    simSpeed = new Slider(30,100,90,10,"Simulation Speed",16,50,50,50,2,1,1,0);
+    restitution_slider = new Slider(30,170,90,10,"Constant of Restitution",16,50,50,50,1.08,1,0.974,0.025);
+    grabradius_slider = new Slider(30,240,90,10,"Grab Radius",16,50,50,50,200,100,100,0);
+    sensitivity_slider = new Slider(30,310,90,10,"Sensitivity",16,50,50,50,5,2,2,0);
     
 
     x_prev = mouseX; y_prev = mouseY;
@@ -19,21 +19,19 @@ function initGUI(){
 
 function drawGUI(){
     // draw main GUI frame
-    fill(0,0,40);
-    rect(SCREENX1-PADDING,SCREENY1-PADDING,SCREENX2-SCREENX1+2*PADDING,SCREENY2-SCREENY1+2*PADDING);
+    ctx.fillStyle = "rgb(0,0,40)";
+    ctx.fillRect(SCREENX1-PADDING,SCREENY1-PADDING,SCREENX2-SCREENX1+2*PADDING,SCREENY2-SCREENY1+2*PADDING);
 }
 function GUI(){
     // mouse grab
-    let x = mouseX; let y = mouseY;
-    if(x>SCREENX1 && x<SCREENX2 && y>SCREENY1 && y<SCREENY2){
-        if(mouseIsPressed){
-            fill(220,220,220,70);
-            ellipse(x,y,2*GRABRADIUS,2*GRABRADIUS);
-            if(mouseButton == LEFT){moveParticles(x,y,x_prev,y_prev);}
-            else if(mouseButton == RIGHT){grabParticles();}
-        }
+    if(mousedown && mouseX>SCREENX1 && mouseX<SCREENX2 && mouseY>SCREENY1 && mouseY<SCREENY2){
+        ctx.fillStyle = "rgb(220 220 220 / 50%)";
+        ctx.beginPath();
+        ctx.arc(mouseX,mouseY,GRABRADIUS,0,2*Math.PI);
+        ctx.fill();
+        moveParticles(mouseX,mouseY,x_prev,y_prev);
     }
-    x_prev = x; y_prev = y;
+    x_prev = mouseX; y_prev = mouseY;
 
     // do buttons
     pauseButton.draw();
@@ -67,24 +65,21 @@ class Button{
     }
 
     draw(){
-        fill(this.colour[0],this.colour[1],this.colour[2]);
-        rect(this.x,this.y,this.width,this.height);
-        textSize(this.ts);
-        fill(0);
-        text(this.title,this.x+this.ts*0.25,this.y+this.height-this.ts*0.25);
+        ctx.fillStyle = `rgb(${this.colour[0]},${this.colour[1]},${this.colour[2]})`;
+        ctx.fillRect(this.x,this.y,this.width,this.height);
+        ctx.fillStyle = "rgb(0,0,0)";
+        ctx.fillText(this.title,this.x+this.ts*0.25,this.y+this.height-this.ts*0.25);
     }
 
     click(){
-        let x = mouseX;
-        let y = mouseY;
-        if(x>this.x && y>this.y && x<this.x+this.width && y<this.y+this.height){
-            if(mouseIsPressed && mouseButton == LEFT){this.func();}
+        if(mousedownX>this.x && mousedownY>this.y && mousedownX<this.x+this.width && mousedownY<this.y+this.height){
+            this.func();
         }
     }
 }
 
 class Slider{
-    constructor(x,y,w,h,title,titlesize,r,g,b,max,default_,radius){
+    constructor(x,y,w,h,title,titlesize,r,g,b,max,default_,start,radius){
         this.x = x;
         this.y = y;
         this.width = w;
@@ -93,36 +88,31 @@ class Slider{
         this.ts = titlesize;
         this.colour = [r,g,b];
         this.default_xs =  w*default_/max;
-        this.xs = w*default_/max;
+        this.xs = w*start/max;
         this.max=max;
-        this.value = default_;
+        this.value = start;
         this.radius = radius;
         this.default = default_;
     }
 
     draw(){
-        fill(220);
-        rect(this.x,this.y,this.width,this.height);
-        fill(this.colour[0],this.colour[1],this.colour[2]);
-        rect(this.x,this.y,this.xs,this.height);
-        textSize(this.ts);
-        fill(240);
-        text(this.title,this.x,this.y-this.ts*0.5);
-        textSize(this.ts*0.75);
-        text(round(this.value,6),this.x,this.y+this.ts*1.75);
+        ctx.fillStyle = "rgb(220,220,220)";
+        ctx.fillRect(this.x,this.y,this.width,this.height);
+        ctx.fillStyle = `rgb(${this.colour[0]},${this.colour[1]},${this.colour[2]})`;
+        ctx.fillRect(this.x,this.y,this.xs,this.height);
+        ctx.fillStyle = "rgb(240,240,240)";
+        ctx.fillText(this.title,this.x,this.y-this.ts*0.5);
+        ctx.fillText(this.value.toFixed(3),this.x,this.y+this.ts*1.75);
     }
 
     click(){
-        let x = mouseX;
-        let y = mouseY;
-        if(x>this.x && y>this.y && x<this.x+this.width && y<this.y+this.height){
-            if(mouseIsPressed && mouseButton == LEFT){
-                this.xs = x-this.x;
-                this.value = this.xs*this.max/this.width;
-                if((this.default-this.value)*(this.default-this.value)<this.radius*this.radius){
-                    //this.xs=this.width*this.default/this.max;
-                    this.xs = this.default_xs;
-                }
+        if(mousedown && mouseX>this.x && mouseY>this.y && mouseX<this.x+this.width && mouseY<this.y+this.height){
+
+            this.xs = mouseX-this.x;
+            this.value = this.xs*this.max/this.width;
+            if((this.default-this.value)*(this.default-this.value)<this.radius*this.radius){
+                //this.xs=this.width*this.default/this.max;
+                this.xs = this.default_xs;
             }
         }
         this.value = this.xs*this.max/this.width;
