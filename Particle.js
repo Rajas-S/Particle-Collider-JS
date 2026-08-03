@@ -20,33 +20,41 @@ class Particle{
     this.vy += this.ay*deltaTime * SIMSPEED;
   }
 
-  draw(){
-    let speedSq = distSq(this.vx,this.vy);
-    let KE = this.mass*speedSq*0.003;
-    const r = clamp(KE,0,255);
-    const g = clamp(180-KE*KE*0.0005,0,255);
-    const b = clamp(255-KE*3,0,255);
-    fill(r,g,b);
-    circle(this.x,this.y,this.radius*2);
+  draw(showparticlecolour,particlerect){
+    if(showparticlecolour){
+      let speedSq = distSq(this.vx,this.vy);
+      let KE = this.mass*speedSq*0.003;
+      const r = clamp(KE,0,255);
+      const g = clamp(180-KE*KE*0.0005,0,255);
+      const b = clamp(255-KE*3,0,255);
+      fill(r,g,b);
+    }
+    else{fill(PARTICLECOLOURVALUE);}
+    if(particlerect){rect(this.x,this.y,this.radius*2,this.radius*2);}
+    else{circle(this.x,this.y,this.radius*2);}
   }
 
   CheckWallCollision(x1,y1,x2,y2){
 
     // application of velocity dampening is probably not correct but is good enough
 
-    if(this.x<this.radius+x1){this.x=this.radius+x1; this.vx*=-1}
-    if(this.x>x2-this.radius){this.x=x2-this.radius; this.vx*=-1}
-    if(this.y<this.radius+y1){this.y=this.radius+y1; this.vy*=-1}
-    if(this.y>y2-this.radius){this.y=y2-this.radius; this.vy*=-1} 
-  }
+    // if(this.x<this.radius+x1){this.x=this.radius+x1; this.vx*=-1}
+    // if(this.x>x2-this.radius){this.x=x2-this.radius; this.vx*=-1}
+    // if(this.y<this.radius+y1){this.y=this.radius+y1; this.vy*=-1}
+    // if(this.y>y2-this.radius){this.y=y2-this.radius; this.vy*=-1} 
 
-  CheckCollision(other){
-    return distSq(this.x-other.x,this.y-other.y)<=(this.radius+other.radius)*(this.radius+other.radius);
+    if(this.x<this.radius+x1){this.x=this.radius+x1; this.vx*=-1*restitution; this.vy*=restitution;}
+    if(this.x>x2-this.radius){this.x=x2-this.radius; this.vx*=-1*restitution; this.vy*=restitution;}
+    if(this.y<this.radius+y1){this.y=this.radius+y1; this.vy*=-1*restitution; this.vx*=restitution;}
+    if(this.y>y2-this.radius){this.y=y2-this.radius; this.vy*=-1*restitution; this.vx*=restitution;} 
   }
 
   Collide(other){
-
     let distanceSq = distSq(this.x-other.x,this.y-other.y);
+    let target = (this.radius+other.radius);
+
+    if(distanceSq>target*target){return;}
+
     let this_velocity = [this.vx,this.vy];
     let other_velocity = [other.vx,other.vy];
 
@@ -63,7 +71,7 @@ class Particle{
     const B_norm = normA(B);
     
     // apply correction along vectors for projection
-    const overlap = this.radius+other.radius-sqrt(distanceSq);
+    const overlap = target-sqrt(distanceSq);
 
     if(overlap>overlapThresh){
       const this_percentage = this.mass/mass_sum;
