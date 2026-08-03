@@ -15,12 +15,12 @@ let gridshow = 0;
 let showparticlecolour = 0;
 let particlerect = 1;
 
-const MAXPARTICLERADIUS = 2;
+const MAXPARTICLERADIUS = 3;
 const PARTICLECOLOURVALUE = 180;
 
 let pause = 0;
 
-let n = 15000;
+let n = 100000;
 let p = Array(n);
 
 let lasttime = performance.now()/1000;
@@ -40,17 +40,18 @@ let posA = Array(POSALEN).fill(0);
 function setup() {
   createCanvas(WIDTH, HEIGHT);
   noStroke();
+  noSmooth();
   // initalise n random particles with random attributes
   for(let i=0;i<n;i++){
     //let x = 900*Math.round(random(0,1))+300;
     //let y = 500*Math.round(random(0,1))+100;
     let x = random(SCREENX1,SCREENX2);
     let y = random(SCREENY1,SCREENY2);
-    let r = random(1.7,1.7);
+    let r = random(0.1,1.5);
     let m = r*r;
     let vx = random(-150,150);
     let vy = random(-150,150);
-    p[i]=new Particle(r,m,x,y,vx,vy,0,100);
+    p[i]=new Particle(r,m,x,y,vx,vy,0,0);
   }
 
   // n+=1;
@@ -100,7 +101,7 @@ function main(){
   
     // draw each particle
     for(let i=0;i<n;i++){
-       p[i].draw(showparticlecolour,particlerect); 
+      p[i].draw(showparticlecolour,particlerect); 
     }
 }
 function draw() {
