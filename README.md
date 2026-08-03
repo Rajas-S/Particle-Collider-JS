@@ -11,10 +11,10 @@ TODO:
 OPTIMIZE CODE:  
 -refactor code  
 -remove uneccesary heavy math items e.g. arrays  
--use spatial partitioning to make collsion checks more efficient  
--make the main draw loop more efficiently structured  
+-fix spatial partitioning algorithm 
+-make the main draw loop more efficiently structured - possibly use multithreading?
+-OPTIMIZE RENDERING - no rendering gives significant fps (5x increase at 100000 particles) so use better libraries or better methods.
   
 UI:  
 -add UI around main screen where user can change parameters during run time
--add UI where user can start and stop main loop and change initial condiitons on restart
--add mouse interactivity to program where user can point and hold to "slosh" particles around or to move x,y towards mouse x,y in magnetic fashion
+-add UI where user can change initial condiitons on restart
