@@ -11,7 +11,11 @@ function initGUI(){
     restitution_slider = new Slider(30,170,90,10,"Constant of Restitution",16,50,50,50,1.08,1,0.974,0.025);
     grabradius_slider = new Slider(30,240,90,10,"Grab Radius",16,50,50,50,200,100,100,0);
     sensitivity_slider = new Slider(30,310,90,10,"Sensitivity",16,50,50,50,5,2,2,0);
-    
+    colour_toggle = new ToggleButton(30,380,"Colour",16,1);
+    particlerect_toggle =  new ToggleButton(130,380,"ParticleRect",16,0);
+    gridshow_toggle =  new ToggleButton(30,440,"ShowGrid",16,0);
+    framerate_infotext = new InfoText(1240,30,"FPS");
+    particlenumber_infotext = new InfoText(1240,60,"Number Of Particles");
 
     x_prev = mouseX; y_prev = mouseY;
 
@@ -50,6 +54,18 @@ function GUI(){
 
     sensitivity_slider.draw();
     SENSITIVITY = sensitivity_slider.click();
+
+    colour_toggle.draw();
+    showparticlecolour = colour_toggle.click();
+
+    particlerect_toggle.draw();
+    particlerect = particlerect_toggle.click();
+
+    gridshow_toggle.draw();
+    gridshow = gridshow_toggle.click();
+
+    framerate_infotext.draw(fps);
+    particlenumber_infotext.draw(n);
 }
 
 class Button{
@@ -59,7 +75,7 @@ class Button{
         this.width = w;
         this.height = h;
         this.title = title;
-        this.ts = titlesize;
+        this.ts=titlesize;
         this.colour = [r,g,b];
         this.func = func;
     }
@@ -117,6 +133,42 @@ class Slider{
         }
         this.value = this.xs*this.max/this.width;
         return this.value;
+    }
+}
+
+class ToggleButton{
+    constructor(x,y,title,titlesize,start){
+        this.x = x;
+        this.y = y;
+        this.title = title;
+        this.ts = titlesize;
+        this.value = start; 
+        this.downtoggle = 0;
+    }
+
+    draw(){
+        if(this.value){ctx.fillStyle = "rgb(0,200,255)";}
+        else{ctx.fillStyle = "rgb(220,220,220)";}
+        ctx.fillRect(this.x,this.y,10,10);
+        ctx.fillText(`${this.title}: ${this.value}`,this.x,this.y-this.ts*0.5);
+    }
+
+    click(){
+        if(mousedown && !this.downtoggle && mouseX>this.x && mouseY>this.y && mouseX<this.x+10 && mouseY<this.y+10){this.downtoggle=1; this.value = (this.value+1)%2;}
+        else if(!mousedown){this.downtoggle=0;}
+        return this.value;
+    }
+}
+
+class InfoText{
+    constructor(x,y,text){
+        this.x=x;
+        this.y=y;
+        this.text=text;
+    }
+    draw(info){
+        ctx.fillStyle="rgb(240,240,240)";
+        ctx.fillText(`${this.text}: ${info}`,this.x,this.y);
     }
 }
 

@@ -12,6 +12,7 @@ const SCREENX1 = 300, SCREENX2 = 1200, SCREENY1 = 0, SCREENY2 = HEIGHT
 const ctx = document.getElementById("myCanvas").getContext("2d");
 ctx.font = "18px serif";
 
+// add mouse event listeners
 let mouseX, mouseY;
 let mousedownX, mousedownY;
 let mousedown = 0;
@@ -36,18 +37,20 @@ let gridshow = 0;
 let showparticlecolour = 0;
 let particlerect = 1;
 
-const MAXPARTICLERADIUS = 2;
+const MAXPARTICLERADIUS = 2.5;
 const PARTICLECOLOURVALUE = 180;
+const TICKINTERVAL = 5;
 
 let pause = 0;
 
-let n = 100000;
+let n = 25000;
 let p = Array(n);
 
 let lasttime = performance.now()/1000;
 let currenttime;
 let dt;
 let fps;
+let ticks = 0;
 
 let GnA = Array(n);
 let iA = Array(n);
@@ -59,14 +62,15 @@ let posA = Array(POSALEN).fill(0);
 // -------------------------------------
 
 function setup() {
-  //createCanvas(WIDTH, HEIGHT);
+  ctx.lineWidth = 0.05;
+  ctx.strokeStyle = "rgb(220,220,220)";
   // initalise n random particles with random attributes
   for(let i=0;i<n;i++){
     //let x = 900*Math.round(random(0,1))+300;
     //let y = 500*Math.round(random(0,1))+100;
     let x = Math.random()*(SCREENX2-SCREENX1)+SCREENX1;
     let y = Math.random()*(SCREENY2-SCREENY1)+SCREENY1;
-    let r = Math.random()*1.5+0.1;
+    let r = Math.random()*2+0.1;
     let m = r*r;
     let vx = Math.random()*300-150;
     let vy = Math.random()*300-150;
@@ -114,21 +118,26 @@ function main(){
   }
 }
 function draw() {
+  ticks++;
   ctx.fillRect(0,0,50,50);
     currenttime = performance.now()/1000;
     dt = currenttime-lasttime;
-    fps = 1/dt;
+    if(ticks%TICKINTERVAL==0){fps = 1/dt;}
     lasttime=currenttime;
   
     main();
     GUI();
+
+    // show grid
     if(gridshow){
       for(let x=0;x<numX;x++){
         for(let y=0;y<numY;y++){
-          ctx.fillRect(x*MAXPARTICLERADIUS+SCREENX1,y*MAXPARTICLERADIUS+SCREENY1,MAXPARTICLERADIUS,MAXPARTICLERADIUS);
+          ctx.strokeRect(x*MAXPARTICLERADIUS+SCREENX1,y*MAXPARTICLERADIUS+SCREENY1,MAXPARTICLERADIUS,MAXPARTICLERADIUS);
         }
       }
     }
+
+    // request new frame
     requestAnimationFrame(draw);
 }
 
