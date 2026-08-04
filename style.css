@@ -2,6 +2,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box; /* Prevents padding issues globally */
+    touch-action: none;
 }
 
 body {
