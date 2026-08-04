@@ -5,15 +5,15 @@ let x_prev, y_prev;
 let stored_simspeed;
 
 function initGUI(){
-    pauseButton = new Button(30,20,50,20,"Pause",16,255,0,51,pausefunc);
-    startButton = new Button(30,50,50,20,"Start",16,0,230,84,startfunc);
-    resetButton = new Button(1240,80,50,20,"Reset",16,240,240,240,resetfunc);
+    pauseButton = new Button(30,20,50,30,"Pause",16,255,0,51,pausefunc);
+    startButton = new Button(100,20,50,30,"Start",16,0,230,84,startfunc);
+    resetButton = new Button(1240,70,50,30,"Reset",16,240,240,240,resetfunc);
 
-    simSpeed = new Slider(30,100,90,10,"Simulation Speed",16,50,50,50,2,1,1,0);
-    restitution_slider = new Slider(30,170,90,10,"Constant of Restitution",16,50,50,50,1.08,1,0.974,0.025);
-    grabradius_slider = new Slider(30,240,90,10,"Grab Radius",16,50,50,50,200,100,100,0);
-    sensitivity_slider = new Slider(30,310,90,10,"Sensitivity",16,50,50,50,5,2,2,0);
-    gridwidth_slider = new Slider(30,510,90,10,"Grid Width",16,50,50,50,0.5,0.1,0.1,0);
+    simSpeed = new Slider(30,100,90,20,"Simulation Speed",16,50,50,50,2,1,1,0);
+    restitution_slider = new Slider(30,170,90,20,"Constant of Restitution",16,50,50,50,1.08,1,0.974,0.025);
+    grabradius_slider = new Slider(30,240,90,20,"Grab Radius",16,50,50,50,200,100,100,0);
+    sensitivity_slider = new Slider(30,310,90,20,"Sensitivity",16,50,50,50,5,2,2,0);
+    gridwidth_slider = new Slider(30,510,90,20,"Grid Width",16,50,50,50,0.5,0.1,0.1,0);
 
     colour_toggle = new ToggleButton(30,380,"Colour",16,1);
     particlerect_toggle =  new ToggleButton(130,380,"ParticleRect",16,0);
@@ -134,7 +134,7 @@ class Slider{
         ctx.fillRect(this.x,this.y,this.xs,this.height);
         ctx.fillStyle = "rgb(240,240,240)";
         ctx.fillText(this.title,this.x,this.y-this.ts*0.5);
-        ctx.fillText(this.value.toFixed(3),this.x,this.y+this.ts*1.75);
+        ctx.fillText(this.value.toFixed(3),this.x,this.y+this.ts*2.5);
     }
 
     click(){
@@ -166,12 +166,12 @@ class ToggleButton{
     draw(){
         if(this.value){ctx.fillStyle = "rgb(0,200,255)";}
         else{ctx.fillStyle = "rgb(220,220,220)";}
-        ctx.fillRect(this.x,this.y,10,10);
+        ctx.fillRect(this.x,this.y,20,20);
         ctx.fillText(`${this.title}: ${this.value}`,this.x,this.y-this.ts*0.5);
     }
 
     click(){
-        if(mousedown && !this.downtoggle && mouseX>this.x && mouseY>this.y && mouseX<this.x+10 && mouseY<this.y+10){this.downtoggle=1; this.value = (this.value+1)%2;}
+        if(mousedown && !this.downtoggle && mouseX>this.x && mouseY>this.y && mouseX<this.x+20 && mouseY<this.y+20){this.downtoggle=1; this.value = (this.value+1)%2;}
         else if(!mousedown && this.downtoggle){this.downtoggle=0;}
         return this.value;
     }
