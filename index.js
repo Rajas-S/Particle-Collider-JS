@@ -46,7 +46,14 @@ const TICKINTERVAL = 5;
 let pause = 0;
 
 let n = 1000;
-let p = Array(n);
+let pradius = new Float32Array(n);
+let pmass = new Float32Array(n);
+let px = new Float32Array(n);
+let py = new Float32Array(n);
+let pvx = new Float32Array(n);
+let pvy = new Float32Array(n);
+let pax = new Float32Array(n);
+let pay = new Float32Array(n);
 
 let lasttime = performance.now()/1000;
 let currenttime;
@@ -68,15 +75,14 @@ function setup() {
   ctx.strokeStyle = "rgb(220,220,220)";
   // initalise n random particles with random attributes
   for(let i=0;i<n;i++){
-    //let x = 900*Math.round(random(0,1))+300;
-    //let y = 500*Math.round(random(0,1))+100;
-    let x = Math.random()*(SCREENX2-SCREENX1)+SCREENX1;
-    let y = Math.random()*(SCREENY2-SCREENY1)+SCREENY1;
-    let r = Math.random()*MAXPARTICLERADIUS+0.1;
-    let m = r*r;
-    let vx = Math.random()*300-150;
-    let vy = Math.random()*300-150;
-    p[i]= new Particle(r,m,x,y,vx,vy,0,0);
+    px[i] = Math.random()*(SCREENX2-SCREENX1)+SCREENX1;
+    py[i] = Math.random()*(SCREENY2-SCREENY1)+SCREENY1;
+    pradius[i] = Math.random()*MAXPARTICLERADIUS+0.1;
+    pmass[i] = pradius[i]*pradius[i];
+    pvx[i] = Math.random()*300-150;
+    pvy [i]= Math.random()*300-150;
+    pax[i]=0;
+    pay[i]=0
   }
 
   // n+=1;
@@ -96,25 +102,31 @@ function main(){
   drawGUI();
 
 
+  // for(let k=0;k<n;k++){
+  //   for(let j=k+1;j<n;j++){
+  //       pCollide(k,j);
+  //   }
+  // }
   SpatialPartitioning();
   
   
   //particles check wall collision
   for(let i=0;i<n;i++){
-    p[i].CheckWallCollision(SCREENX1,SCREENY1,SCREENX2,SCREENY2);
+   pCheckWallCollision(i,SCREENX1,SCREENY1,SCREENX2,SCREENY2);
   }
   
   // particles update positions and velocities
   
   for(let i=0;i<n;i++){
-    p[i].update(dt,SIMSPEED);
+    pupdate(i,dt,SIMSPEED);
   }
   
   // draw each particle
   for(let i=0;i<n;i++){
-    p[i].draw(showparticlecolour,particlerect);
+    pdraw(i,showparticlecolour,particlerect);
   }
 }
+
 function draw() {
   ticks++;
   ctx.fillRect(0,0,50,50);
@@ -145,8 +157,8 @@ function SpatialPartitioning(){
   GnA.fill(0);
   posA.fill(0);
   for(let i=0;i<n;i++){
-    let xpos = Math.floor(p[i].x/(2*MAXPARTICLERADIUS));
-    let ypos = Math.floor(p[i].y/(2*MAXPARTICLERADIUS));
+    let xpos = Math.floor(px[i]/(2*MAXPARTICLERADIUS));
+    let ypos = Math.floor(py[i]/(2*MAXPARTICLERADIUS));
     let cellNumber = xpos+ypos*numX
     GnA[i]=cellNumber; // cell position/hash
     posA[cellNumber]+=1;
@@ -173,13 +185,13 @@ function SpatialPartitioning(){
         let i1 = clampMin(i-numX,0);
         let i2 = clamp(i+1-numX,0,POSALEN);
 
-        const particleK = p[iA[k]];
+        const particleK = iA[k];
 
-        for(let j=posA[clampMin(i-1-numX,0)];j<posA[i1];j++){particleK.Collide(p[iA[j]]);}
-        for(let j=posA[i1];j<posA[i2];j++){particleK.Collide(p[iA[j]]);}
-        for(let j=posA[i2];j<posA[clamp(i+2-numX,0,POSALEN)];j++){particleK.Collide(p[iA[j]]);}
-        for(let j=posA[clampMin(i-1,0)];j<posA[i];j++){particleK.Collide(p[iA[j]]);}
-        for(let j=k+1;j<posA[clampMax(i+1,POSALEN)];j++){particleK.Collide(p[iA[j]]);}
+        for(let j=posA[clampMin(i-1-numX,0)];j<posA[i1];j++){pCollide(particleK,iA[j]);}
+        for(let j=posA[i1];j<posA[i2];j++){pCollide(particleK,iA[j]);}
+        for(let j=posA[i2];j<posA[clamp(i+2-numX,0,POSALEN)];j++){pCollide(particleK,iA[j]);}
+        for(let j=posA[clampMin(i-1,0)];j<posA[i];j++){pCollide(particleK,iA[j]);}
+        for(let j=k+1;j<posA[clampMax(i+1,POSALEN)];j++){pCollide(particleK,iA[j]);}
 
       }
     }

@@ -202,11 +202,11 @@ function startfunc(){
 
 function moveParticles(x,y,x_prev,y_prev){
     for(let i=0;i<n;i++){
-        if(distSq(p[i].x-x,p[i].y-y) < (GRABRADIUS+p[i].radius)*(GRABRADIUS+p[i].radius)){
-            p[i].x += (x-x_prev);
-            p[i].y += (y-y_prev);
-            p[i].vx = SENSITIVITY*(x-x_prev);
-            p[i].vy = SENSITIVITY*(y-y_prev);
+        if(distSq(px[i]-x,py[i]-y) < (GRABRADIUS+pradius[i])*(GRABRADIUS+pradius[i])){
+            px[i] += (x-x_prev);
+            py[i] += (y-y_prev);
+            pvx[i] = SENSITIVITY*(x-x_prev);
+            pvy[i] = SENSITIVITY*(y-y_prev);
         }
     }
 }
@@ -214,14 +214,21 @@ function moveParticles(x,y,x_prev,y_prev){
 function resetfunc(){
     let new_n = document.getElementById("new_n").value;
     if(new_n!=""){n=new_n}
-    p = Array(n);
-    let new_MAXPARTICLERADIUS = document.getElementById("new_maxparticleradius").value;
+    pradius = new Float32Array(n);
+    pmass = new Float32Array(n);
+    px = new Float32Array(n);
+    py = new Float32Array(n);
+    pvx = new Float32Array(n);
+    pvy = new Float32Array(n);
+    pax = new Float32Array(n);
+    pay = new Float32Array(n);
+    new_MAXPARTICLERADIUS = document.getElementById("new_maxparticleradius").value;
     if(new_MAXPARTICLERADIUS!=""){MAXPARTICLERADIUS = new_MAXPARTICLERADIUS;}
-    GnA = Array(n);
-    iA = Array(n);
+    GnA = new Uint32Array(n);
+    iA = new Uint32Array(n);
     numX = Math.ceil((SCREENX2-SCREENX1)/(2*MAXPARTICLERADIUS));
     numY = Math.ceil((SCREENY2-SCREENY1)/(2*MAXPARTICLERADIUS));
     POSALEN = numX*numY+1;
-    posA = Array(POSALEN).fill(0);
+    posA = new Uint32Array(POSALEN);
     setup();
 }
