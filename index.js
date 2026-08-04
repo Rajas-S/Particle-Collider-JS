@@ -14,20 +14,18 @@ ctx.font = "18px serif";
 
 // add mouse event listeners
 let mouseX, mouseY;
-let mousedownX, mousedownY;
 let mousedown = 0;
 document.addEventListener('pointermove', function(event) {
     mouseX = event.clientX;
     mouseY = event.clientY;
 });
 document.addEventListener('pointerdown', function(event) {
-    mousedownX = event.clientX;
-    mousedownY = event.clientY;
     mousedown = 1;
 });
 document.addEventListener('pointerup', function(event) {
-    mousedownX = event.clientX;
-    mousedownY = event.clientY;
+    mousedown = 0;
+});
+document.addEventListener('pointercancel', function(event) {
     mousedown = 0;
 });
 
