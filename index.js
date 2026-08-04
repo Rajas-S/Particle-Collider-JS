@@ -16,16 +16,16 @@ ctx.font = "18px serif";
 let mouseX, mouseY;
 let mousedownX, mousedownY;
 let mousedown = 0;
-document.addEventListener('mousemove', function(event) {
+document.addEventListener('pointermove', function(event) {
     mouseX = event.clientX;
     mouseY = event.clientY;
 });
-document.addEventListener('mousedown', function(event) {
+document.addEventListener('pointerdown', function(event) {
     mousedownX = event.clientX;
     mousedownY = event.clientY;
     mousedown = 1;
 });
-document.addEventListener('mouseup', function(event) {
+document.addEventListener('pointerup', function(event) {
     mousedownX = event.clientX;
     mousedownY = event.clientY;
     mousedown = 0;
