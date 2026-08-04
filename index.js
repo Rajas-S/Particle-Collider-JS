@@ -54,12 +54,12 @@ let dt;
 let fps;
 let ticks = 0;
 
-let GnA = Array(n);
-let iA = Array(n);
+let GnA = new Uint32Array(n);
+let iA = new Uint32Array(n);
 let numX = Math.ceil((SCREENX2-SCREENX1)/(2*MAXPARTICLERADIUS));
 let numY = Math.ceil((SCREENY2-SCREENY1)/(2*MAXPARTICLERADIUS));
 let POSALEN = numX*numY+1;
-let posA = Array(POSALEN).fill(0);
+let posA = new Uint32Array(POSALEN);
 
 // -------------------------------------
 
