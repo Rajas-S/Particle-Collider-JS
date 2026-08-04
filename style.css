@@ -13,3 +13,71 @@ body {
 canvas {
     display: block; /* Removes the default baseline inline-block spacing */
 }
+
+#infoplate{
+    position: absolute;
+    left: 1220px;
+    top: 300px;
+    width: 300px;
+    color: rgb(240,240,240);
+    font: bold 18px serif;
+}
+
+#nameplate{
+    position: absolute;
+    left: 1215px;
+    top: 705px;
+    width: 700px;
+    color: rgb(240,240,240);
+    font: 16px serif;
+}
+
+#new_n{
+    position: absolute;
+    left: 1360px;
+    top: 110px;
+    width: 80px;
+    color: rgb(0, 0, 0);
+}
+#new_n::placeholder{
+    font-style: italic;
+    color: rgb(160, 160, 160);
+}
+#new_n::-webkit-outer-spin-button,
+#new_n::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+#new_n_label{
+    position: absolute;
+    left: 1240px;
+    top: 110px;
+    width: 100px;
+    color: rgb(240, 240, 240);
+    font: 16px serif;
+}
+
+#new_maxparticleradius{
+    position: absolute;
+    left: 1360px;
+    top: 170px;
+    width: 80px;
+    color: rgb(0, 0, 0);
+}
+#new_maxparticleradius::placeholder{
+    font-style: italic;
+    color: rgb(160, 160, 160);
+}
+#new_maxparticleradius::-webkit-outer-spin-button,
+#new_maxparticleradius::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+#new_maxparticleradius_label{
+    position: absolute;
+    left: 1230px;
+    top: 170px;
+    width: 130px;
+    color: rgb(240, 240, 240);
+    font: 14px serif;
+}

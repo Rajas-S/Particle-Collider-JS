@@ -37,13 +37,13 @@ let gridshow = 0;
 let showparticlecolour = 0;
 let particlerect = 1;
 
-const MAXPARTICLERADIUS = 2.5;
+let MAXPARTICLERADIUS = 5;
 const PARTICLECOLOURVALUE = 180;
 const TICKINTERVAL = 5;
 
 let pause = 0;
 
-let n = 25000;
+let n = 1000;
 let p = Array(n);
 
 let lasttime = performance.now()/1000;
@@ -54,9 +54,9 @@ let ticks = 0;
 
 let GnA = Array(n);
 let iA = Array(n);
-const numX = Math.ceil((SCREENX2-SCREENX1)/(MAXPARTICLERADIUS));
-const numY = Math.ceil((SCREENY2-SCREENY1)/(MAXPARTICLERADIUS));
-const POSALEN = numX*numY+1;
+let numX = Math.ceil((SCREENX2-SCREENX1)/(2*MAXPARTICLERADIUS));
+let numY = Math.ceil((SCREENY2-SCREENY1)/(2*MAXPARTICLERADIUS));
+let POSALEN = numX*numY+1;
 let posA = Array(POSALEN).fill(0);
 
 // -------------------------------------
@@ -70,7 +70,7 @@ function setup() {
     //let y = 500*Math.round(random(0,1))+100;
     let x = Math.random()*(SCREENX2-SCREENX1)+SCREENX1;
     let y = Math.random()*(SCREENY2-SCREENY1)+SCREENY1;
-    let r = Math.random()*2+0.1;
+    let r = Math.random()*MAXPARTICLERADIUS+0.1;
     let m = r*r;
     let vx = Math.random()*300-150;
     let vy = Math.random()*300-150;
@@ -85,10 +85,6 @@ function setup() {
   // let vx = random(-50,50);
   // let vy = random(-50,50);
   // p.push(new Particle(r,m,800,50,0,200,0,0))
-
-
-  // initialise gui
-  initGUI();
 
 }
 function main(){
@@ -132,7 +128,7 @@ function draw() {
     if(gridshow){
       for(let x=0;x<numX;x++){
         for(let y=0;y<numY;y++){
-          ctx.strokeRect(x*MAXPARTICLERADIUS+SCREENX1,y*MAXPARTICLERADIUS+SCREENY1,MAXPARTICLERADIUS,MAXPARTICLERADIUS);
+          ctx.strokeRect(x*2*MAXPARTICLERADIUS+SCREENX1,y*2*MAXPARTICLERADIUS+SCREENY1,2*MAXPARTICLERADIUS,2*MAXPARTICLERADIUS);
         }
       }
     }
@@ -147,8 +143,8 @@ function SpatialPartitioning(){
   GnA.fill(0);
   posA.fill(0);
   for(let i=0;i<n;i++){
-    let xpos = Math.floor(p[i].x/(MAXPARTICLERADIUS));
-    let ypos = Math.floor(p[i].y/(MAXPARTICLERADIUS));
+    let xpos = Math.floor(p[i].x/(2*MAXPARTICLERADIUS));
+    let ypos = Math.floor(p[i].y/(2*MAXPARTICLERADIUS));
     let cellNumber = xpos+ypos*numX
     GnA[i]=cellNumber; // cell position/hash
     posA[cellNumber]+=1;
@@ -190,4 +186,6 @@ function SpatialPartitioning(){
 
 // ---------------------------
 setup();
+// initialise gui
+initGUI();
 draw();

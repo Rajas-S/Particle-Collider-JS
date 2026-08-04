@@ -7,13 +7,18 @@ let stored_simspeed;
 function initGUI(){
     pauseButton = new Button(30,20,50,20,"Pause",16,255,0,51,pausefunc);
     startButton = new Button(30,50,50,20,"Start",16,0,230,84,startfunc);
+    resetButton = new Button(1240,80,50,20,"Reset",16,240,240,240,resetfunc);
+
     simSpeed = new Slider(30,100,90,10,"Simulation Speed",16,50,50,50,2,1,1,0);
     restitution_slider = new Slider(30,170,90,10,"Constant of Restitution",16,50,50,50,1.08,1,0.974,0.025);
     grabradius_slider = new Slider(30,240,90,10,"Grab Radius",16,50,50,50,200,100,100,0);
     sensitivity_slider = new Slider(30,310,90,10,"Sensitivity",16,50,50,50,5,2,2,0);
+    gridwidth_slider = new Slider(30,510,90,10,"Grid Width",16,50,50,50,0.5,0.1,0.1,0);
+
     colour_toggle = new ToggleButton(30,380,"Colour",16,1);
     particlerect_toggle =  new ToggleButton(130,380,"ParticleRect",16,0);
     gridshow_toggle =  new ToggleButton(30,440,"ShowGrid",16,0);
+
     framerate_infotext = new InfoText(1240,30,"FPS");
     particlenumber_infotext = new InfoText(1240,60,"Number Of Particles");
 
@@ -44,6 +49,9 @@ function GUI(){
     startButton.draw();
     startButton.click();
 
+    resetButton.draw();
+    resetButton.click();
+
     simSpeed.draw();
     if(!pause){SIMSPEED=simSpeed.click();}
     restitution_slider.draw();
@@ -54,6 +62,9 @@ function GUI(){
 
     sensitivity_slider.draw();
     SENSITIVITY = sensitivity_slider.click();
+
+    gridwidth_slider.draw();
+    ctx.lineWidth = gridwidth_slider.click();
 
     colour_toggle.draw();
     showparticlecolour = colour_toggle.click();
@@ -78,6 +89,7 @@ class Button{
         this.ts=titlesize;
         this.colour = [r,g,b];
         this.func = func;
+        this.downtoggle = 0;
     }
 
     draw(){
@@ -88,9 +100,11 @@ class Button{
     }
 
     click(){
-        if(mousedownX>this.x && mousedownY>this.y && mousedownX<this.x+this.width && mousedownY<this.y+this.height){
+        if(mousedown && !this.downtoggle && mouseX>this.x && mouseY>this.y && mouseX<this.x+this.width && mouseY<this.y+this.height){
+            this.downtoggle=1;
             this.func();
         }
+        else if (!mousedown && this.downtoggle){this.downtoggle=0;}
     }
 }
 
@@ -109,6 +123,7 @@ class Slider{
         this.value = start;
         this.radius = radius;
         this.default = default_;
+        this.downtoggle=0;
     }
 
     draw(){
@@ -124,6 +139,7 @@ class Slider{
     click(){
         if(mousedown && mouseX>this.x && mouseY>this.y && mouseX<this.x+this.width && mouseY<this.y+this.height){
 
+            this.downtoggle=1;
             this.xs = mouseX-this.x;
             this.value = this.xs*this.max/this.width;
             if((this.default-this.value)*(this.default-this.value)<this.radius*this.radius){
@@ -155,7 +171,7 @@ class ToggleButton{
 
     click(){
         if(mousedown && !this.downtoggle && mouseX>this.x && mouseY>this.y && mouseX<this.x+10 && mouseY<this.y+10){this.downtoggle=1; this.value = (this.value+1)%2;}
-        else if(!mousedown){this.downtoggle=0;}
+        else if(!mousedown && this.downtoggle){this.downtoggle=0;}
         return this.value;
     }
 }
@@ -194,6 +210,17 @@ function moveParticles(x,y,x_prev,y_prev){
     }
 }
 
-function grabParticles(){
-
+function resetfunc(){
+    let new_n = document.getElementById("new_n").value;
+    if(new_n!=""){n=new_n}
+    p = Array(n);
+    let new_MAXPARTICLERADIUS = document.getElementById("new_maxparticleradius").value;
+    if(new_MAXPARTICLERADIUS!=""){MAXPARTICLERADIUS = new_MAXPARTICLERADIUS;}
+    GnA = Array(n);
+    iA = Array(n);
+    numX = Math.ceil((SCREENX2-SCREENX1)/(2*MAXPARTICLERADIUS));
+    numY = Math.ceil((SCREENY2-SCREENY1)/(2*MAXPARTICLERADIUS));
+    POSALEN = numX*numY+1;
+    posA = Array(POSALEN).fill(0);
+    setup();
 }
