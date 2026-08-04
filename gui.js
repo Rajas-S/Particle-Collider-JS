@@ -21,7 +21,6 @@ function initGUI(){
 
     framerate_infotext = new InfoText(1240,30,"FPS");
     particlenumber_infotext = new InfoText(1240,60,"Number Of Particles");
-    t_infotext = new InfoText(1240,400,"mousedown");
 
     x_prev = mouseX; y_prev = mouseY;
 
@@ -79,7 +78,6 @@ function GUI(){
     framerate_infotext.draw(fps);
     particlenumber_infotext.draw(n);
 
-    t_infotext.draw(mousedown);
 }
 
 class Button{

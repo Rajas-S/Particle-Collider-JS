@@ -22,6 +22,8 @@ document.addEventListener('pointermove', function(event) {
 document.addEventListener('pointerdown', function(event) {
     mouseX = event.clientX;
     mouseY = event.clientY;
+    x_prev=mouseX;
+    y_prev=mouseY;
     mousedown = 1;
 });
 document.addEventListener('pointerup', function(event) {
