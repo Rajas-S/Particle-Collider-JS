@@ -20,6 +20,8 @@ document.addEventListener('pointermove', function(event) {
     mouseY = event.clientY;
 });
 document.addEventListener('pointerdown', function(event) {
+    mouseX = event.clientX;
+    mouseY = event.clientY;
     mousedown = 1;
 });
 document.addEventListener('pointerup', function(event) {
