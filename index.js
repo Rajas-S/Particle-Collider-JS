@@ -77,7 +77,7 @@ function setup() {
   for(let i=0;i<n;i++){
     px[i] = Math.random()*(SCREENX2-SCREENX1)+SCREENX1;
     py[i] = Math.random()*(SCREENY2-SCREENY1)+SCREENY1;
-    pradius[i] = Math.random()*MAXPARTICLERADIUS+0.1;
+    pradius[i] = Math.random()*MAXPARTICLERADIUS*0.8+0.1;
     pmass[i] = pradius[i]*pradius[i];
     pvx[i] = Math.random()*300-150;
     pvy [i]= Math.random()*300-150;
@@ -100,19 +100,13 @@ function main(){
   ctx.fillStyle = "rgb(0,0,8)"
   ctx.fillRect(0,0,WIDTH,HEIGHT);
   drawGUI();
-
-
-  // for(let k=0;k<n;k++){
-  //   for(let j=k+1;j<n;j++){
-  //       pCollide(k,j);
-  //   }
-  // }
+  
   SpatialPartitioning();
   
   
   //particles check wall collision
   for(let i=0;i<n;i++){
-   pCheckWallCollision(i,SCREENX1,SCREENY1,SCREENX2,SCREENY2);
+    pCheckWallCollision(i,SCREENX1,SCREENY1,SCREENX2,SCREENY2);
   }
   
   // particles update positions and velocities
@@ -125,6 +119,7 @@ function main(){
   for(let i=0;i<n;i++){
     pdraw(i,showparticlecolour,particlerect);
   }
+
 }
 
 function draw() {
@@ -157,8 +152,8 @@ function SpatialPartitioning(){
   GnA.fill(0);
   posA.fill(0);
   for(let i=0;i<n;i++){
-    let xpos = Math.floor(px[i]/(2*MAXPARTICLERADIUS));
-    let ypos = Math.floor(py[i]/(2*MAXPARTICLERADIUS));
+    let xpos = Math.floor((px[i]-SCREENX1)/(2*MAXPARTICLERADIUS));
+    let ypos = Math.floor((py[i]-SCREENY1)/(2*MAXPARTICLERADIUS));
     let cellNumber = xpos+ypos*numX
     GnA[i]=cellNumber; // cell position/hash
     posA[cellNumber]+=1;
@@ -182,16 +177,32 @@ function SpatialPartitioning(){
     if(posA[i+1]-posA[i]>0){
       for(let k=posA[i];k<posA[i+1];k++){
 
-        let i1 = clampMin(i-numX,0);
-        let i2 = clamp(i+1-numX,0,POSALEN);
 
+        //ctx.fillStyle = "rgb(255 0 0 / 50%)"
         const particleK = iA[k];
 
-        for(let j=posA[clampMin(i-1-numX,0)];j<posA[i1];j++){pCollide(particleK,iA[j]);}
-        for(let j=posA[i1];j<posA[i2];j++){pCollide(particleK,iA[j]);}
-        for(let j=posA[i2];j<posA[clamp(i+2-numX,0,POSALEN)];j++){pCollide(particleK,iA[j]);}
-        for(let j=posA[clampMin(i-1,0)];j<posA[i];j++){pCollide(particleK,iA[j]);}
-        for(let j=k+1;j<posA[clampMax(i+1,POSALEN)];j++){pCollide(particleK,iA[j]);}
+        let ix = i%numX;
+        let i_minus_numX = i-numX;
+
+        if(i_minus_numX>0 && ix>0){
+          for(let j=posA[i-1-numX];j<posA[i-numX];j++){pCollide(particleK,iA[j]);} // nw
+          //if(particleK==0){ctx.fillRect((i-1-numX)%numX*2*MAXPARTICLERADIUS+SCREENX1,Math.floor((i-1-numX)/numX)*2*MAXPARTICLERADIUS+SCREENY1,2*MAXPARTICLERADIUS,2*MAXPARTICLERADIUS);}
+        }
+        if(i_minus_numX>=0){
+          for(let j=posA[i-numX];j<posA[i+1-numX];j++){pCollide(particleK,iA[j]);} // n
+          //if(particleK==0){ctx.fillRect((i-numX)%numX*2*MAXPARTICLERADIUS+SCREENX1,Math.floor((i-numX)/numX)*2*MAXPARTICLERADIUS+SCREENY1,2*MAXPARTICLERADIUS,2*MAXPARTICLERADIUS);}
+        }
+        if(i_minus_numX>=0 && ix<numX-1){
+          for(let j=posA[i+1-numX];j<posA[i+2-numX];j++){pCollide(particleK,iA[j]);} // ne
+          //if(particleK==0){ctx.fillRect((i+1-numX)%numX*2*MAXPARTICLERADIUS+SCREENX1,Math.floor((i+1-numX)/numX)*2*MAXPARTICLERADIUS+SCREENY1,2*MAXPARTICLERADIUS,2*MAXPARTICLERADIUS);}
+        }
+        if(ix>0){
+          for(let j=posA[i-1];j<posA[i];j++){pCollide(particleK,iA[j]);} // w
+          //if(particleK==0){ctx.fillRect((i-1)%numX*2*MAXPARTICLERADIUS+SCREENX1,Math.floor((i-1)/numX)*2*MAXPARTICLERADIUS+SCREENY1,2*MAXPARTICLERADIUS,2*MAXPARTICLERADIUS);}
+        }
+        for(let j=k+1;j<posA[i+1];j++){pCollide(particleK,iA[j]);} // current
+        //if(particleK==0){ctx.fillRect((i)%numX*2*MAXPARTICLERADIUS+SCREENX1,Math.floor(i/numX)*2*MAXPARTICLERADIUS+SCREENY1,2*MAXPARTICLERADIUS,2*MAXPARTICLERADIUS);}
+
 
       }
     }

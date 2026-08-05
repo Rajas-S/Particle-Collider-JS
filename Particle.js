@@ -52,11 +52,11 @@ function pCollide(_this,_other){
   if(distanceSq>target*target){return;}
   // ensure particles dont occupy the same space
   if(distanceSq==0){return;}
-  if(pmass[_this]==0 || pmass[_other]==0){return;}
+  //if(pmass[_this]==0 || pmass[_other]==0){return;}
 
   const this_mass = pmass[_this];
   const other_mass = pmass[_other];
-  const mass_sum = pmass[_this]+pmass[_other];
+  const mass_sum = this_mass+other_mass;
 
   
 
