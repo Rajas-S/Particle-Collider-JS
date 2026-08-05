@@ -12,16 +12,25 @@ body {
 
 canvas {
     display: block; /* Removes the default baseline inline-block spacing */
-    touch-action: none;
+    touch-action: pinch-zoom;
 }
 
-#infoplate{
+#infoplate1{
     position: absolute;
-    left: 1220px;
+    left: 1230px;
     top: 300px;
     width: 300px;
     color: rgb(240,240,240);
     font: bold 18px serif;
+}
+
+#infoplate2{
+    position: absolute;
+    left: 1230px;
+    top: 380px;
+    width: 300px;
+    color: rgb(240,240,240);
+    font:  16px serif;
 }
 
 #nameplate{

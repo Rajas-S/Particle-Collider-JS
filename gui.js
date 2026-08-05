@@ -9,7 +9,7 @@ function initGUI(){
     startButton = new Button(100,20,50,30,"Start",16,0,230,84,startfunc);
     resetButton = new Button(1240,70,50,30,"Reset",16,240,240,240,resetfunc);
 
-    simSpeed = new Slider(30,100,90,20,"Simulation Speed",16,50,50,50,2,1,1,0);
+    simSpeed = new Slider(30,100,90,20,"Simulation Speed",16,50,50,50,5,1,1,0);
     restitution_slider = new Slider(30,170,90,20,"Constant of Restitution",16,50,50,50,1.08,1,0.974,0.025);
     grabradius_slider = new Slider(30,240,90,20,"Grab Radius",16,50,50,50,200,100,100,0);
     sensitivity_slider = new Slider(30,310,90,20,"Sensitivity",16,50,50,50,5,2,2,0);
