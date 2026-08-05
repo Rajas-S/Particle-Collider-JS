@@ -9,11 +9,13 @@ function initGUI(){
     startButton = new Button(100,20,50,30,"Start",16,0,230,84,startfunc);
     resetButton = new Button(1240,70,50,30,"Reset",16,240,240,240,resetfunc);
 
-    simSpeed = new Slider(30,100,90,20,"Simulation Speed",16,50,50,50,5,1,1,0);
-    restitution_slider = new Slider(30,170,90,20,"Constant of Restitution",16,50,50,50,1.08,1,0.974,0.025);
-    grabradius_slider = new Slider(30,240,90,20,"Grab Radius",16,50,50,50,200,100,100,0);
-    sensitivity_slider = new Slider(30,310,90,20,"Sensitivity",16,50,50,50,5,2,2,0);
-    gridwidth_slider = new Slider(30,510,90,20,"Grid Width",16,50,50,50,0.5,0.1,0.1,0);
+    simSpeed = new Slider(30,100,90,20,"Simulation Speed",16,50,50,50,5,0,1,1,0);
+    restitution_slider = new Slider(30,170,90,20,"Constant of Restitution",16,50,50,50,1.08,0,1,0.974,0.025);
+    grabradius_slider = new Slider(30,240,90,20,"Grab Radius",16,50,50,50,200,0,100,100,0);
+    sensitivity_slider = new Slider(30,310,90,20,"Sensitivity",16,50,50,50,5,0,2,2,0);
+    gridwidth_slider = new Slider(30,500,90,20,"Grid Width",16,50,50,50,0.50,0,0.1,0.1,0);
+    pax_slider = new Slider(30,590,90,20,"Global X-acceleration",16,50,50,50,200,-200,0,0,10);
+    pay_slider = new Slider(30,660,90,20,"Global Y-acceleration",16,50,50,50,200,-200,0,0,10);
 
     colour_toggle = new ToggleButton(30,380,"Colour",16,1);
     particlerect_toggle =  new ToggleButton(130,380,"ParticleRect",16,0);
@@ -66,6 +68,12 @@ function GUI(){
     gridwidth_slider.draw();
     ctx.lineWidth = gridwidth_slider.click();
 
+    pax_slider.draw();
+    pax = pax_slider.click();
+
+    pay_slider.draw();
+    pay = pay_slider.click();
+
     colour_toggle.draw();
     showparticlecolour = colour_toggle.click();
 
@@ -110,7 +118,7 @@ class Button{
 }
 
 class Slider{
-    constructor(x,y,w,h,title,titlesize,r,g,b,max,default_,start,radius){
+    constructor(x,y,w,h,title,titlesize,r,g,b,max,min,default_,start,radius){
         this.x = x;
         this.y = y;
         this.width = w;
@@ -118,13 +126,14 @@ class Slider{
         this.title = title;
         this.ts = titlesize;
         this.colour = [r,g,b];
-        this.default_xs =  w*default_/max;
-        this.xs = w*start/max;
         this.max=max;
+        this.min=min;
+        this.range = max-min;
+        this.xs = w*(start-min)/this.range;
+        this.default_xs =  w*(default_-min)/this.range;
         this.value = start;
         this.radius = radius;
         this.default = default_;
-        this.downtoggle=0;
     }
 
     draw(){
@@ -140,15 +149,14 @@ class Slider{
     click(){
         if(mousedown && mouseX>this.x && mouseY>this.y && mouseX<this.x+this.width && mouseY<this.y+this.height){
 
-            this.downtoggle=1;
             this.xs = mouseX-this.x;
-            this.value = this.xs*this.max/this.width;
+            this.value = this.xs*(this.range)/this.width+this.min;
             if((this.default-this.value)*(this.default-this.value)<this.radius*this.radius){
                 //this.xs=this.width*this.default/this.max;
                 this.xs = this.default_xs;
             }
         }
-        this.value = this.xs*this.max/this.width;
+        this.value = this.xs*(this.range)/this.width+this.min;
         return this.value;
     }
 }

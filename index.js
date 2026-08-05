@@ -52,8 +52,8 @@ let px = new Float32Array(n);
 let py = new Float32Array(n);
 let pvx = new Float32Array(n);
 let pvy = new Float32Array(n);
-let pax = new Float32Array(n);
-let pay = new Float32Array(n);
+let pax = 0;
+let pay = 0;
 
 let lasttime = performance.now()/1000;
 let currenttime;
@@ -81,8 +81,6 @@ function setup() {
     pmass[i] = pradius[i]*pradius[i];
     pvx[i] = Math.random()*300-150;
     pvy [i]= Math.random()*300-150;
-    pax[i]=0;
-    pay[i]=0
   }
 
   // n+=1;

@@ -4,8 +4,8 @@ const overlapThresh = -0.001;
 function pupdate(_this,deltaTime,SIMSPEED){
   px[_this] += pvx[_this]*deltaTime * SIMSPEED;
   py[_this] += pvy[_this]*deltaTime * SIMSPEED;
-  pvx[_this] += pax[_this]*deltaTime * SIMSPEED;
-  pvy[_this] += pay[_this]*deltaTime * SIMSPEED;
+  pvx[_this] += pax*deltaTime * SIMSPEED;
+  pvy[_this] += pay*deltaTime * SIMSPEED;
 }
 
 function pdraw(_this){
