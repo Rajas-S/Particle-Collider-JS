@@ -10,7 +10,7 @@ function pupdate(_this,deltaTime,SIMSPEED){
 
 function pdraw(_this){
   if(showparticlecolour){
-    let speedSq = distSq(pvx[_this],pvy[_this]);
+    let speedSq = pvx[_this]*pvx[_this]+pvy[_this]*pvy[_this];
     let KE = pmass[_this]*speedSq*0.003;
     const r = clamp(KE,0,255);
     const g = clamp(180-KE*KE*0.0005,0,255);
@@ -118,6 +118,12 @@ function pCollide(_this,_other){
   pvx[_other] += new_velocity_x_other;
   pvy[_other] += new_velocity_y_other;
 
+}
+
+function clamp(value, minimum, maximum){
+  if(value>maximum){return maximum;}
+  if(value<minimum){return minimum;}
+  return value;
 }
 
 
