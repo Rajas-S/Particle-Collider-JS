@@ -9,13 +9,13 @@ function initGUI(){
     startButton = new Button(100,20,50,30,"Start",16,0,230,84,startfunc);
     resetButton = new Button(1240,70,50,30,"Reset",16,240,240,240,resetfunc);
 
-    simSpeed = new Slider(30,100,90,20,"Simulation Speed",16,50,50,50,5,0,1,1,0);
-    restitution_slider = new Slider(30,170,90,20,"Constant of Restitution",16,50,50,50,1.08,0,1,0.974,0.025);
+    simspeed_slider = new Slider(30,100,90,20,"Simulation Speed",16,240,170,0,5,0,1,1,0);
+    restitution_slider = new Slider(30,170,90,20,"Constant of Restitution",16,240,170,0,1.08,0,1,0.964,0.03);
     grabradius_slider = new Slider(30,240,90,20,"Grab Radius",16,50,50,50,200,0,100,100,0);
     sensitivity_slider = new Slider(30,310,90,20,"Sensitivity",16,50,50,50,5,0,2,2,0);
     gridwidth_slider = new Slider(30,500,90,20,"Grid Width",16,50,50,50,0.50,0,0.1,0.1,0);
-    pax_slider = new Slider(30,590,90,20,"Global X-acceleration",16,50,50,50,200,-200,0,0,10);
-    pay_slider = new Slider(30,660,90,20,"Global Y-acceleration",16,50,50,50,200,-200,0,0,10);
+    pax_slider = new Slider(30,590,90,20,"Global X-acceleration",16,0,240,120,200,-200,0,0,10);
+    pay_slider = new Slider(30,660,90,20,"Global Y-acceleration",16,0,240,120,200,-200,0,0,10);
 
     colour_toggle = new ToggleButton(30,380,"Colour",16,1);
     particlerect_toggle =  new ToggleButton(130,380,"ParticleRect",16,0);
@@ -54,8 +54,8 @@ function GUI(){
     resetButton.draw();
     resetButton.click();
 
-    simSpeed.draw();
-    if(!pause){SIMSPEED=simSpeed.click();}
+    simspeed_slider.draw();
+    if(!pause){SIMSPEED=simspeed_slider.click();}
     restitution_slider.draw();
     restitution=restitution_slider.click();
 
@@ -64,15 +64,15 @@ function GUI(){
 
     sensitivity_slider.draw();
     SENSITIVITY = sensitivity_slider.click();
+    
+    pax_slider.draw();
+    pax = pax_slider.click();
+    
+    pay_slider.draw();
+    pay = pay_slider.click();
 
     gridwidth_slider.draw();
     ctx.lineWidth = gridwidth_slider.click();
-
-    pax_slider.draw();
-    pax = pax_slider.click();
-
-    pay_slider.draw();
-    pay = pay_slider.click();
 
     colour_toggle.draw();
     showparticlecolour = colour_toggle.click();
@@ -139,11 +139,17 @@ class Slider{
     draw(){
         ctx.fillStyle = "rgb(220,220,220)";
         ctx.fillRect(this.x,this.y,this.width,this.height);
-        ctx.fillStyle = `rgb(${this.colour[0]},${this.colour[1]},${this.colour[2]})`;
-        ctx.fillRect(this.x,this.y,this.xs,this.height);
-        ctx.fillStyle = "rgb(240,240,240)";
         ctx.fillText(this.title,this.x,this.y-this.ts*0.5);
         ctx.fillText(this.value.toFixed(3),this.x,this.y+this.ts*2.5);
+        ctx.fillStyle = `rgb(${this.colour[0]},${this.colour[1]},${this.colour[2]})`;
+        ctx.fillRect(this.x,this.y,this.xs,this.height);
+        
+        ctx.beginPath();
+        ctx.moveTo(this.x+this.default_xs,this.y);
+        ctx.lineTo(this.x+this.default_xs,this.y+this.height);
+        ctx.strokeStyle = "rgb(0,0,0)";
+        ctx.lineWidth = 4;
+        ctx.stroke();
     }
 
     click(){

@@ -18,19 +18,19 @@ canvas {
 #infoplate1{
     position: absolute;
     left: 1230px;
-    top: 300px;
+    top: 260px;
     width: 300px;
-    color: rgb(240,240,240);
+    color: rgb(240,50,120);
     font: bold 18px serif;
 }
 
 #infoplate2{
     position: absolute;
     left: 1230px;
-    top: 380px;
+    top: 320px;
     width: 300px;
     color: rgb(240,240,240);
-    font:  16px serif;
+    font:  14px serif;
 }
 
 #nameplate{
@@ -39,7 +39,7 @@ canvas {
     top: 705px;
     width: 700px;
     color: rgb(240,240,240);
-    font: 16px serif;
+    font: bold 16px serif;
 }
 
 #new_n{
@@ -87,7 +87,7 @@ canvas {
     position: absolute;
     left: 1230px;
     top: 170px;
-    width: 130px;
+    width: 120px;
     color: rgb(240, 240, 240);
     font: 14px serif;
 }

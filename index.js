@@ -1,13 +1,8 @@
 // Particle Collider physics system by Rajas Sharma
 
-// TODO: fix the particle fusion - particles "sticking" to each other
-//       => the application of restitution on velocity is wrong... FIX IT -##### THE PHYSICS EQUATION FOR 1D COLLISION IS FOR ELASTIC COLLISION 
-//                                                                               - ADJUST THE EQUATION FOR INELASTIC COLLISIONS WHERE 0<=RESTITUTION<=1 
-//       stop dt from spiking if exit tab
+//-----------------------------------------------------
 
-
-
-const WIDTH = 1540, HEIGHT = 730;
+const WIDTH = 1580, HEIGHT = 728;
 const SCREENX1 = 300, SCREENX2 = 1200, SCREENY1 = 0, SCREENY2 = HEIGHT
 const ctx = document.getElementById("myCanvas").getContext("2d");
 ctx.font = "18px serif";
@@ -133,6 +128,7 @@ function draw() {
 
     // show grid
     if(gridshow){
+      ctx.strokeStyle = "rgb(240,240,240)";
       for(let x=0;x<numX;x++){
         for(let y=0;y<numY;y++){
           ctx.strokeRect(x*2*MAXPARTICLERADIUS+SCREENX1,y*2*MAXPARTICLERADIUS+SCREENY1,2*MAXPARTICLERADIUS,2*MAXPARTICLERADIUS);
