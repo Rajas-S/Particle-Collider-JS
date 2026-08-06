@@ -216,7 +216,7 @@ function startfunc(){
 
 function moveParticles(x,y,x_prev,y_prev){
     for(let i=0;i<n;i++){
-        if(distSq(px[i]-x,py[i]-y) < (GRABRADIUS+pradius[i])*(GRABRADIUS+pradius[i])){
+        if(((px[i]-x)*(px[i]-x)+(py[i]-y)*(py[i]-y)) < (GRABRADIUS+pradius[i])*(GRABRADIUS+pradius[i])){
             px[i] += (x-x_prev);
             py[i] += (y-y_prev);
             pvx[i] = SENSITIVITY*(x-x_prev);
