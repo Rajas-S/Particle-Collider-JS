@@ -14,8 +14,8 @@ function initGUI(){
     grabradius_slider = new Slider(30,240,90,20,"Grab Radius",16,50,50,50,200,0,100,100,0);
     sensitivity_slider = new Slider(30,310,90,20,"Sensitivity",16,50,50,50,5,0,2,2,0);
     gridwidth_slider = new Slider(30,500,90,20,"Grid Width",16,50,50,50,0.50,0,0.1,0.1,0);
-    pax_slider = new Slider(30,590,90,20,"Global X-acceleration",16,0,240,120,200,-200,0,0,10);
-    pay_slider = new Slider(30,660,90,20,"Global Y-acceleration",16,0,240,120,200,-200,0,0,10);
+    pax_slider = new Slider(30,590,90,20,"Global X-acceleration",16,0,240,120,200,-200,0,0,15);
+    pay_slider = new Slider(30,660,90,20,"Global Y-acceleration",16,0,240,120,200,-200,0,0,15);
 
     colour_toggle = new ToggleButton(30,380,"Colour",16,1);
     particlerect_toggle =  new ToggleButton(130,380,"ParticleRect",16,0);
