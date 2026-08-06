@@ -76,8 +76,6 @@ function setup() {
     pvx[i] = Math.random()*300-150;
     pvy [i]= Math.random()*300-150;
   }
-  // initialise gui
-  initGUI();
 }
 
 function SpatialPartitioning(){
@@ -187,4 +185,6 @@ function main(){
 
 // ---------------------------
 setup();
+// initialise gui needs to be out of setup so that gui isnt reset.
+initGUI();
 main();
