@@ -36,7 +36,6 @@ let particlerect = 1;
 
 let MAXPARTICLERADIUS = 5;
 const PARTICLECOLOURVALUE = 180;
-const TICKINTERVAL = 5;
 
 let pause = 0;
 
@@ -51,10 +50,10 @@ let pax = 0;
 let pay = 0;
 
 let lasttime = performance.now()/1000;
+let lastfpstimestamp = lasttime;
 let currenttime;
 let dt;
 let fps;
-let ticks = 0;
 
 let GnA = new Uint32Array(n);
 let iA = new Uint32Array(n);
@@ -77,69 +76,9 @@ function setup() {
     pvx[i] = Math.random()*300-150;
     pvy [i]= Math.random()*300-150;
   }
-
-  // n+=1;
-  // let x = random(0,WIDTH);
-  // let y = random(0,HEIGHT);
-  // let r = random(50,50);
-  // let m = r*r;
-  // let vx = random(-50,50);
-  // let vy = random(-50,50);
-  // p.push(new Particle(r,m,800,50,0,200,0,0))
-
+  // initialise gui
+  initGUI();
 }
-function main(){
-
-  ctx.fillStyle = "rgb(0,0,8)"
-  ctx.fillRect(0,0,WIDTH,HEIGHT);
-  drawGUI();
-  
-  SpatialPartitioning();
-  
-  
-  //particles check wall collision
-  for(let i=0;i<n;i++){
-    pCheckWallCollision(i,SCREENX1,SCREENY1,SCREENX2,SCREENY2);
-  }
-  
-  // particles update positions and velocities
-  
-  for(let i=0;i<n;i++){
-    pupdate(i,dt,SIMSPEED);
-  }
-  
-  // draw each particle
-  for(let i=0;i<n;i++){
-    pdraw(i,showparticlecolour,particlerect);
-  }
-
-}
-
-function draw() {
-  ticks++;
-  ctx.fillRect(0,0,50,50);
-    currenttime = performance.now()/1000;
-    dt = currenttime-lasttime;
-    if(ticks%TICKINTERVAL==0){fps = 1/dt;}
-    lasttime=currenttime;
-  
-    main();
-    GUI();
-
-    // show grid
-    if(gridshow){
-      ctx.strokeStyle = "rgb(240,240,240)";
-      for(let x=0;x<numX;x++){
-        for(let y=0;y<numY;y++){
-          ctx.strokeRect(x*2*MAXPARTICLERADIUS+SCREENX1,y*2*MAXPARTICLERADIUS+SCREENY1,2*MAXPARTICLERADIUS,2*MAXPARTICLERADIUS);
-        }
-      }
-    }
-
-    // request new frame
-    requestAnimationFrame(draw);
-}
-
 
 function SpatialPartitioning(){
   // fill out Grid number Array (GnA)
@@ -203,8 +142,49 @@ function SpatialPartitioning(){
   }
 }
 
+function DoPhysics(){
+  //particles check wall collision
+  for(let i=0;i<n;i++){pCheckWallCollision(i,SCREENX1,SCREENY1,SCREENX2,SCREENY2);}
+
+  SpatialPartitioning();
+
+  // particles update positions and velocities
+  for(let i=0;i<n;i++){pupdate(i,dt,SIMSPEED);}
+}
+function Render(){
+  ctx.fillStyle = "rgb(0,0,8)"
+  ctx.fillRect(0,0,WIDTH,HEIGHT);
+  drawGUI();
+  GUI();
+
+  // draw each particle
+  for(let i=0;i<n;i++){pdraw(i,showparticlecolour,particlerect);}
+
+  // show grid
+  if(gridshow){
+    ctx.strokeStyle = "rgb(240,240,240)";
+    for(let x=0;x<numX;x++){
+      for(let y=0;y<numY;y++){
+        ctx.strokeRect(x*2*MAXPARTICLERADIUS+SCREENX1,y*2*MAXPARTICLERADIUS+SCREENY1,2*MAXPARTICLERADIUS,2*MAXPARTICLERADIUS);
+      }
+    }
+  }
+}
+
+function main(){
+  currenttime = performance.now()/1000;
+  dt = currenttime-lasttime;
+  if(currenttime-lastfpstimestamp>0.2){fps = 1/dt; lastfpstimestamp=currenttime;}
+  lasttime=currenttime;
+
+  DoPhysics();
+  Render();
+
+  // request new frame
+  requestAnimationFrame(main);
+
+}
+
 // ---------------------------
 setup();
-// initialise gui
-initGUI();
-draw();
+main();
