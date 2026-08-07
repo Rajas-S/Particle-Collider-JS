@@ -142,21 +142,20 @@ function SpatialPartitioning(){
 
 function DoPhysics(){
   //particles check wall collision
-  for(let i=0;i<n;i++){pCheckWallCollision(i,SCREENX1,SCREENY1,SCREENX2,SCREENY2);}
-
   SpatialPartitioning();
+  for(let i=0;i<n;i++){
+    pCheckWallCollision(i,SCREENX1,SCREENY1,SCREENX2,SCREENY2);
+    pupdate(i,dt,SIMSPEED);
+    pdraw(i,showparticlecolour,particlerect);
+  }
 
-  // particles update positions and velocities
-  for(let i=0;i<n;i++){pupdate(i,dt,SIMSPEED);}
+
 }
 function Render(){
   ctx.fillStyle = "rgb(0,0,8)"
   ctx.fillRect(0,0,WIDTH,HEIGHT);
   drawGUI();
   GUI();
-
-  // draw each particle
-  for(let i=0;i<n;i++){pdraw(i,showparticlecolour,particlerect);}
 
   // show grid
   if(gridshow){
@@ -175,8 +174,8 @@ function main(){
   if(currenttime-lastfpstimestamp>0.2){fps = 1/dt; lastfpstimestamp=currenttime;}
   lasttime=currenttime;
 
-  DoPhysics();
   Render();
+  DoPhysics();
 
   // request new frame
   requestAnimationFrame(main);
