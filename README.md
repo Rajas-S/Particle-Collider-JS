@@ -3,8 +3,7 @@ A simulation for perfectly elastic collisions
 web access: https://rajas-s.github.io/Particle-Collider-JS/  
 
 TODO:  
--explore and experiment with multithreading to increase speed
--figure out how to implement hardware-acceleration
+-optimise collision solving code  
   
 Optimisations in Place:  
 -replaced vector2 objects with arrays and later variables.  
