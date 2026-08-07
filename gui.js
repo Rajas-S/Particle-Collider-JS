@@ -10,7 +10,7 @@ function initGUI(){
     resetButton = new Button(1240,70,50,30,"Reset",16,240,240,240,resetfunc);
 
     simspeed_slider = new Slider(30,100,90,20,"Simulation Speed",16,240,170,0,5,0,1,1,0);
-    restitution_slider = new Slider(30,170,90,20,"Constant of Restitution",16,240,170,0,1.08,0,1,0.964,0.03);
+    restitution_slider = new Slider(30,170,90,20,"Coefficient of Restitution",16,240,170,0,1.08,0,1,0.964,0.03);
     grabradius_slider = new Slider(30,240,90,20,"Grab Radius",16,50,50,50,200,0,100,100,0);
     sensitivity_slider = new Slider(30,310,90,20,"Sensitivity",16,50,50,50,5,0,2,2,0);
     gridwidth_slider = new Slider(30,500,90,20,"Grid Width",16,50,50,50,0.50,0,0.1,0.1,0);
