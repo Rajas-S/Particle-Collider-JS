@@ -57,6 +57,7 @@ function pCollide(_this,_other){
   const this_mass = pmass[_this];
   const other_mass = pmass[_other];
   const mass_sum = this_mass+other_mass;
+  const inv_mass_sum = 1/mass_sum;
 
   
 
@@ -90,16 +91,16 @@ function pCollide(_this,_other){
 
   // ---------
 
-  let proj_this = (pvx[_this]*Bx+pvy[_this]*By)/mag_B;
-  let proj_other = (pvx[_other]*Bx+pvy[_other]*By)/mag_B;
+  let proj_this = (pvx[_this]*Bx+pvy[_this]*By)*inv_mag_B;
+  let proj_other = (pvx[_other]*Bx+pvy[_other]*By)*inv_mag_B;
   
   // let new_proj_this = ((pmass[_this]-pmass[_other])/mass_sum)*proj_this + (2*pmass[_other]/mass_sum)*proj_other
   // let new_proj_other = ((pmass[_other]-pmass[_this])/mass_sum)*proj_other + (2*pmass[_this]/mass_sum)*proj_this
 
   // a set of equations for inelastic equations solving for new volocities
 
-  let new_proj_this = ((restitution*other_mass*(proj_other-proj_this))+this_mass*proj_this+other_mass*proj_other)/mass_sum;
-  let new_proj_other = ((restitution*this_mass*(proj_this-proj_other))+this_mass*proj_this+other_mass*proj_other)/mass_sum;
+  let new_proj_this = ((restitution*other_mass*(proj_other-proj_this))+this_mass*proj_this+other_mass*proj_other)*inv_mass_sum;
+  let new_proj_other = ((restitution*this_mass*(proj_this-proj_other))+this_mass*proj_this+other_mass*proj_other)*inv_mass_sum;
 
 
   // find vector projections of scaled collision values

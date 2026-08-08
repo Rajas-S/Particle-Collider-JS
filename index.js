@@ -169,7 +169,7 @@ function Render(){
 }
 
 function main(){
-  currenttime = performance.now()/1000;
+  currenttime = performance.now()*0.001;
   dt = currenttime-lasttime;
   if(currenttime-lastfpstimestamp>0.2){fps = 1/dt; lastfpstimestamp=currenttime;}
   lasttime=currenttime;
